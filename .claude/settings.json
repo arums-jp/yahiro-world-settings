@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 scripts/check-consistency.py:*)",
+      "Bash(python3 scripts/add-contradiction.py:*)",
+      "Read(設定ドキュメント/**)",
+      "Edit(設定ドキュメント/**)"
+    ]
+  }
+}
