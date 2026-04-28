@@ -1,0 +1,4 @@
+interface:
+  display_name: "Syosetu Draft Uploader"
+  short_description: "Prepare and upload local Markdown episodes as Syosetu drafts."
+  default_prompt: "Use local Markdown episode files to prepare one draft per episode on syosetu.com."
