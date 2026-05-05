@@ -116,7 +116,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(6, 1fr);
       gap: 7px;
     }
 
@@ -187,6 +187,89 @@
       box-shadow: inset 4px 0 0 var(--warn);
     }
 
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      place-items: end center;
+      padding: 14px;
+      background: rgba(23, 33, 31, 0.38);
+    }
+
+    .dialog-backdrop.open {
+      display: grid;
+    }
+
+    .dialog {
+      width: min(720px, 100%);
+      max-height: min(78vh, 680px);
+      overflow: auto;
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: 0 18px 42px rgba(23, 33, 31, 0.24);
+    }
+
+    .dialog-header,
+    .dialog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-actions {
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .dialog-title {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.4;
+    }
+
+    .dialog-body {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .note-location,
+    .note-preview,
+    .note-status {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .note-preview {
+      padding: 10px;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      font: inherit;
+      line-height: 1.6;
+    }
+
+    .notes-output {
+      min-height: 220px;
+      white-space: pre;
+    }
+
     @media (min-width: 760px) {
       .top {
         grid-template-columns: minmax(0, 1fr) minmax(360px, 1.2fr);
@@ -239,6 +322,8 @@
         <button id="playButton" class="primary">再生</button>
         <button id="pauseButton">一時停止</button>
         <button id="nextButton">次話</button>
+        <button id="noteButton">メモ</button>
+        <button id="notesButton">一覧</button>
       </div>
 
       <div class="settings">
@@ -260,6 +345,27 @@
     <main id="reader" class="reader">
       <div class="message">第x部、第x章、第xx話を選んで再生すると、その話から順番に読み上げます。</div>
     </main>
+
+    <div id="noteDialog" class="dialog-backdrop" aria-hidden="true">
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="noteDialogTitle">
+        <div class="dialog-header">
+          <h2 id="noteDialogTitle" class="dialog-title">メモを記録</h2>
+          <button id="closeNoteButton">閉じる</button>
+        </div>
+        <div class="dialog-body">
+          <div id="noteLocation" class="note-location"></div>
+          <div id="notePreview" class="note-preview"></div>
+          <textarea id="noteText" placeholder="気づいたことを書く"></textarea>
+          <div id="noteStatus" class="note-status"></div>
+        </div>
+        <div class="dialog-actions">
+          <button id="saveNoteButton" class="primary">記録</button>
+          <button id="copyNotesButton">一覧をコピー</button>
+          <button id="showNotesButton">一覧を表示</button>
+          <button id="clearNotesButton">全削除</button>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script>
@@ -344,6 +450,7 @@
       paused: false,
       stopped: true,
       loading: false,
+      noteContext: null,
     };
 
     const els = {
@@ -356,12 +463,25 @@
       playButton: document.getElementById("playButton"),
       pauseButton: document.getElementById("pauseButton"),
       nextButton: document.getElementById("nextButton"),
+      noteButton: document.getElementById("noteButton"),
+      notesButton: document.getElementById("notesButton"),
       voiceSelect: document.getElementById("voiceSelect"),
       rateInput: document.getElementById("rateInput"),
       rateValue: document.getElementById("rateValue"),
       pitchInput: document.getElementById("pitchInput"),
       pitchValue: document.getElementById("pitchValue"),
       reader: document.getElementById("reader"),
+      noteDialog: document.getElementById("noteDialog"),
+      noteDialogTitle: document.getElementById("noteDialogTitle"),
+      closeNoteButton: document.getElementById("closeNoteButton"),
+      noteLocation: document.getElementById("noteLocation"),
+      notePreview: document.getElementById("notePreview"),
+      noteText: document.getElementById("noteText"),
+      noteStatus: document.getElementById("noteStatus"),
+      saveNoteButton: document.getElementById("saveNoteButton"),
+      copyNotesButton: document.getElementById("copyNotesButton"),
+      showNotesButton: document.getElementById("showNotesButton"),
+      clearNotesButton: document.getElementById("clearNotesButton"),
     };
 
     function escapeHtml(value) {
@@ -406,6 +526,69 @@
         .replace(/[「」『』]/g, "")
         .replace(/\s+/g, " ")
         .trim();
+    }
+
+    function loadNotes() {
+      try {
+        const notes = JSON.parse(localStorage.getItem("yahiroTtsNotes") || "[]");
+        return Array.isArray(notes) ? notes : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem("yahiroTtsNotes", JSON.stringify(notes));
+    }
+
+    function currentNoteContext() {
+      const episode = EPISODES[state.episodeIndex];
+      const paragraph = state.paragraphs[state.paragraphIndex] || "";
+      return {
+        id: `${Date.now()}-${episode.no}-${state.paragraphIndex + 1}`,
+        createdAt: new Date().toISOString(),
+        episodeNo: episode.no,
+        part: episode.part,
+        chapter: episode.chapter,
+        title: episode.title,
+        path: episode.path.replace(/^\.\.\//, ""),
+        paragraphIndex: state.paragraphIndex + 1,
+        paragraphText: paragraph,
+      };
+    }
+
+    function noteLocationText(note) {
+      return `${note.part} / ${note.chapter} / ${note.title} / 段落${note.paragraphIndex}`;
+    }
+
+    function notesToMarkdown(notes) {
+      if (!notes.length) return "記録されたメモはありません。";
+      return notes.map((note) => [
+        `## ${note.title} 段落${note.paragraphIndex}`,
+        ``,
+        `- 記録日時: ${note.createdAt}`,
+        `- 場所: ${noteLocationText(note)}`,
+        `- ファイル: ${note.path}`,
+        ``,
+        `> ${note.paragraphText.replace(/\n/g, "\n> ")}`,
+        ``,
+        note.memo || "（メモなし）",
+      ].join("\n")).join("\n\n---\n\n");
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
     }
 
     function unique(values) {
@@ -461,6 +644,80 @@
         || visibleVoices.find((voice) => /^ja(-|_)?/i.test(voice.lang))
         || visibleVoices[0];
       if (preferred) els.voiceSelect.value = preferred.name;
+    }
+
+    function openNoteDialog(mode = "current") {
+      if (mode === "current" && (!state.paragraphs.length || state.loading)) return;
+      if (state.speaking) pauseSpeech();
+
+      const notes = loadNotes();
+      els.noteDialog.classList.add("open");
+      els.noteDialog.setAttribute("aria-hidden", "false");
+      els.noteStatus.textContent = `保存済みメモ: ${notes.length}件`;
+
+      if (mode === "list") {
+        state.noteContext = null;
+        els.noteDialogTitle.textContent = "メモ一覧";
+        els.noteLocation.textContent = "保存済みメモをMarkdown形式で表示しています。";
+        els.notePreview.textContent = "";
+        els.noteText.value = notesToMarkdown(notes);
+        els.noteText.classList.add("notes-output");
+        els.saveNoteButton.disabled = true;
+        els.copyNotesButton.disabled = !notes.length;
+        els.clearNotesButton.disabled = !notes.length;
+        setTimeout(() => els.noteText.focus(), 0);
+        return;
+      }
+
+      const context = currentNoteContext();
+      state.noteContext = context;
+      els.noteDialogTitle.textContent = "メモを記録";
+      els.noteLocation.textContent = noteLocationText(context);
+      els.notePreview.textContent = context.paragraphText;
+      els.noteText.value = "";
+      els.noteText.classList.remove("notes-output");
+      els.saveNoteButton.disabled = false;
+      els.copyNotesButton.disabled = !notes.length;
+      els.clearNotesButton.disabled = !notes.length;
+      setTimeout(() => els.noteText.focus(), 0);
+    }
+
+    function closeNoteDialog() {
+      els.noteDialog.classList.remove("open");
+      els.noteDialog.setAttribute("aria-hidden", "true");
+      els.noteText.value = "";
+      state.noteContext = null;
+    }
+
+    function saveCurrentNote() {
+      if (!state.noteContext) return;
+      const notes = loadNotes();
+      notes.push({
+        ...state.noteContext,
+        memo: els.noteText.value.trim(),
+      });
+      saveNotes(notes);
+      els.noteStatus.textContent = `記録しました。保存済みメモ: ${notes.length}件`;
+      els.noteText.value = "";
+      els.copyNotesButton.disabled = false;
+      els.clearNotesButton.disabled = false;
+    }
+
+    async function copySavedNotes() {
+      const notes = loadNotes();
+      await copyText(notesToMarkdown(notes));
+      els.noteStatus.textContent = `メモ一覧をコピーしました。保存済みメモ: ${notes.length}件`;
+    }
+
+    function clearSavedNotes() {
+      const notes = loadNotes();
+      if (!notes.length) return;
+      if (!confirm("保存済みメモをすべて削除しますか？")) return;
+      saveNotes([]);
+      els.noteStatus.textContent = "保存済みメモを削除しました。";
+      els.noteText.value = "";
+      els.copyNotesButton.disabled = true;
+      els.clearNotesButton.disabled = true;
     }
 
     function selectedVoice() {
@@ -642,6 +899,8 @@
       els.nextButton.disabled = state.loading || state.episodeIndex >= EPISODES.length - 1;
       els.playButton.disabled = !canPlay || (state.speaking && !state.paused);
       els.pauseButton.disabled = !state.speaking || state.paused;
+      els.noteButton.disabled = !canPlay;
+      els.notesButton.disabled = false;
     }
 
     els.partSelect.addEventListener("change", () => {
@@ -671,6 +930,20 @@
     els.nextButton.addEventListener("click", () => changeEpisode(1));
     els.playButton.addEventListener("click", playSpeech);
     els.pauseButton.addEventListener("click", pauseSpeech);
+    els.noteButton.addEventListener("click", () => openNoteDialog("current"));
+    els.notesButton.addEventListener("click", () => openNoteDialog("list"));
+    els.closeNoteButton.addEventListener("click", closeNoteDialog);
+    els.saveNoteButton.addEventListener("click", saveCurrentNote);
+    els.copyNotesButton.addEventListener("click", () => {
+      copySavedNotes().catch(() => {
+        els.noteStatus.textContent = "コピーできませんでした。本文を選択して手動でコピーしてください。";
+      });
+    });
+    els.showNotesButton.addEventListener("click", () => openNoteDialog("list"));
+    els.clearNotesButton.addEventListener("click", clearSavedNotes);
+    els.noteDialog.addEventListener("click", (event) => {
+      if (event.target === els.noteDialog) closeNoteDialog();
+    });
 
     els.reader.addEventListener("click", (event) => {
       const paragraph = event.target.closest(".paragraph");
