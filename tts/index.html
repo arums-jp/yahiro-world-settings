@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>辺境拠点日誌 読み上げ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #17211f;
+      --muted: #66716e;
+      --line: #d8ded8;
+      --accent: #0f766e;
+      --accent-strong: #0b5e58;
+      --accent-soft: #dcefeb;
+      --current: #fff4c7;
+      --warn: #a15c00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Yu Gothic", "Yu Gothic UI", Meiryo, system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button,
+    select {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    button {
+      min-height: 42px;
+      padding: 0 12px;
+    }
+
+    button:disabled {
+      opacity: 0.42;
+    }
+
+    .primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 8px 20px rgba(23, 33, 31, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    h1 {
+      overflow: hidden;
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .meta {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .selectors {
+      display: grid;
+      grid-template-columns: 0.8fr 1fr 1.4fr;
+      gap: 7px;
+    }
+
+    select {
+      width: 100%;
+      min-height: 38px;
+      padding: 0 8px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 7px;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+      align-items: center;
+    }
+
+    .field {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .voice-field {
+      grid-column: 1 / -1;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .reader {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 18px 12px 64px;
+    }
+
+    .message {
+      margin: 18px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .episode-heading {
+      margin: 0 0 16px;
+      font-size: 22px;
+      line-height: 1.45;
+    }
+
+    .paragraph {
+      margin: 0 0 0.55em;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 17px;
+      line-height: 1.8;
+      text-indent: 1em;
+      white-space: pre-wrap;
+    }
+
+    .paragraph.no-indent {
+      text-indent: 0;
+    }
+
+    .paragraph.current {
+      background: var(--current);
+      box-shadow: inset 4px 0 0 var(--warn);
+    }
+
+    @media (min-width: 760px) {
+      .top {
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 1.2fr);
+        align-items: start;
+        padding: 12px 18px;
+      }
+
+      .selectors,
+      .settings,
+      .controls {
+        grid-column: 2;
+      }
+
+      .title {
+        grid-row: 1 / span 3;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .selectors {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .paragraph {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="title">
+        <h1 id="title">辺境拠点日誌 読み上げ</h1>
+        <div id="meta" class="meta">話数を選んで再生してください</div>
+      </div>
+
+      <div class="selectors">
+        <select id="partSelect" aria-label="部"></select>
+        <select id="chapterSelect" aria-label="章"></select>
+        <select id="episodeSelect" aria-label="話"></select>
+      </div>
+
+      <div class="controls">
+        <button id="prevButton">前話</button>
+        <button id="playButton" class="primary">再生</button>
+        <button id="pauseButton">一時停止</button>
+        <button id="nextButton">次話</button>
+      </div>
+
+      <div class="settings">
+        <div class="field voice-field">
+          <label for="voiceSelect">音声</label>
+          <select id="voiceSelect"></select>
+        </div>
+        <div class="field">
+          <label for="rateInput">速度 <span id="rateValue">1.00</span></label>
+          <input id="rateInput" type="range" min="0.65" max="1.35" step="0.05" value="1">
+        </div>
+        <div class="field">
+          <label for="pitchInput">高さ <span id="pitchValue">1.00</span></label>
+          <input id="pitchInput" type="range" min="0.75" max="1.25" step="0.05" value="1">
+        </div>
+      </div>
+    </header>
+
+    <main id="reader" class="reader">
+      <div class="message">第x部、第x章、第xx話を選んで再生すると、その話から順番に読み上げます。</div>
+    </main>
+  </div>
+
+  <script>
+    const EPISODES = [
+      {"no":1,"part":"第1部","chapter":"第1章_建設期","title":"第01話_三ツ辻、始まります（？）","path":"../辺境拠点日誌/第1部/第1章_建設期/第01話_三ツ辻、始まります（？）.md"},
+      {"no":2,"part":"第1部","chapter":"第1章_建設期","title":"第02話_まず、柵を作ろう","path":"../辺境拠点日誌/第1部/第1章_建設期/第02話_まず、柵を作ろう.md"},
+      {"no":3,"part":"第1部","chapter":"第1章_建設期","title":"第03話_寝る場所を作る","path":"../辺境拠点日誌/第1部/第1章_建設期/第03話_寝る場所を作る.md"},
+      {"no":4,"part":"第1部","chapter":"第1章_建設期","title":"第04話_水を確保せよ","path":"../辺境拠点日誌/第1部/第1章_建設期/第04話_水を確保せよ.md"},
+      {"no":5,"part":"第1部","chapter":"第1章_建設期","title":"第05話_食料はどこから来るのか","path":"../辺境拠点日誌/第1部/第1章_建設期/第05話_食料はどこから来るのか.md"},
+      {"no":6,"part":"第1部","chapter":"第1章_建設期","title":"第06話_長老ヤエ、ご視察に来る","path":"../辺境拠点日誌/第1部/第1章_建設期/第06話_長老ヤエ、ご視察に来る.md"},
+      {"no":7,"part":"第1部","chapter":"第1章_建設期","title":"第07話_初めての嵐","path":"../辺境拠点日誌/第1部/第1章_建設期/第07話_初めての嵐.md"},
+      {"no":8,"part":"第1部","chapter":"第1章_建設期","title":"第08話_1ヶ月が経った","path":"../辺境拠点日誌/第1部/第1章_建設期/第08話_1ヶ月が経った.md"},
+      {"no":9,"part":"第1部","chapter":"第2章_定着期","title":"第09話_役割を決める","path":"../辺境拠点日誌/第1部/第2章_定着期/第09話_役割を決める.md"},
+      {"no":10,"part":"第1部","chapter":"第2章_定着期","title":"第10話_建設仕事を引き継ぐ","path":"../辺境拠点日誌/第1部/第2章_定着期/第10話_建設仕事を引き継ぐ.md"},
+      {"no":11,"part":"第1部","chapter":"第2章_定着期","title":"第11話_常駐の仕事を作る","path":"../辺境拠点日誌/第1部/第2章_定着期/第11話_常駐の仕事を作る.md"},
+      {"no":12,"part":"第1部","chapter":"第2章_定着期","title":"第12話_3集落から物資が届く","path":"../辺境拠点日誌/第1部/第2章_定着期/第12話_3集落から物資が届く.md"},
+      {"no":13,"part":"第1部","chapter":"第2章_定着期","title":"第13話_ガンとタケオのこと","path":"../辺境拠点日誌/第1部/第2章_定着期/第13話_ガンとタケオのこと.md"},
+      {"no":14,"part":"第1部","chapter":"第2章_定着期","title":"第14話_野廻りの地図を作る","path":"../辺境拠点日誌/第1部/第2章_定着期/第14話_野廻りの地図を作る.md"},
+      {"no":15,"part":"第1部","chapter":"第2章_定着期","title":"第15話_初めての集落からの依頼","path":"../辺境拠点日誌/第1部/第2章_定着期/第15話_初めての集落からの依頼.md"},
+      {"no":16,"part":"第1部","chapter":"第2章_定着期","title":"第16話_井戸、完成する","path":"../辺境拠点日誌/第1部/第2章_定着期/第16話_井戸、完成する.md"},
+      {"no":17,"part":"第1部","chapter":"第3章_試練期","title":"第17話_草毛獣作戦、決行","path":"../辺境拠点日誌/第1部/第3章_試練期/第17話_草毛獣作戦、決行.md"},
+      {"no":18,"part":"第1部","chapter":"第3章_試練期","title":"第18話_カネヅカから、偵察依頼","path":"../辺境拠点日誌/第1部/第3章_試練期/第18話_カネヅカから、偵察依頼.md"},
+      {"no":19,"part":"第1部","chapter":"第3章_試練期","title":"第19話_針鼠狼の縄張りを知る","path":"../辺境拠点日誌/第1部/第3章_試練期/第19話_針鼠狼の縄張りを知る.md"},
+      {"no":20,"part":"第1部","chapter":"第3章_試練期","title":"第20話_音で戦う罠を作る","path":"../辺境拠点日誌/第1部/第3章_試練期/第20話_音で戦う罠を作る.md"},
+      {"no":21,"part":"第1部","chapter":"第3章_試練期","title":"第21話_ナル川を、どうにかしたい","path":"../辺境拠点日誌/第1部/第3章_試練期/第21話_ナル川を、どうにかしたい.md"},
+      {"no":22,"part":"第1部","chapter":"第3章_試練期","title":"第22話_橋を、かけた","path":"../辺境拠点日誌/第1部/第3章_試練期/第22話_橋を、かけた.md"},
+      {"no":23,"part":"第1部","chapter":"第3章_試練期","title":"第23話_秋の夜、石積みの文字","path":"../辺境拠点日誌/第1部/第3章_試練期/第23話_秋の夜、石積みの文字.md"},
+      {"no":24,"part":"第1部","chapter":"第4章_完成期","title":"第24話_冬の準備","path":"../辺境拠点日誌/第1部/第4章_完成期/第24話_冬の準備.md"},
+      {"no":25,"part":"第1部","chapter":"第4章_完成期","title":"第25話_冬の見張りは辛い","path":"../辺境拠点日誌/第1部/第4章_完成期/第25話_冬の見張りは辛い.md"},
+      {"no":26,"part":"第1部","chapter":"第4章_完成期","title":"第26話_春の気配と、新しい問題","path":"../辺境拠点日誌/第1部/第4章_完成期/第26話_春の気配と、新しい問題.md"},
+      {"no":27,"part":"第1部","chapter":"第4章_完成期","title":"第27話_針鼠狼を、本気で追い出す","path":"../辺境拠点日誌/第1部/第4章_完成期/第27話_針鼠狼を、本気で追い出す.md"},
+      {"no":28,"part":"第1部","chapter":"第4章_完成期","title":"第28話_三集落が、拠点を見る目が変わった","path":"../辺境拠点日誌/第1部/第4章_完成期/第28話_三集落が、拠点を見る目が変わった.md"},
+      {"no":29,"part":"第1部","chapter":"第4章_完成期","title":"第29話_誰かが、帰りたいと言った","path":"../辺境拠点日誌/第1部/第4章_完成期/第29話_誰かが、帰りたいと言った.md"},
+      {"no":30,"part":"第1部","chapter":"第4章_完成期","title":"第30話_三ツ辻、春が来た","path":"../辺境拠点日誌/第1部/第4章_完成期/第30話_三ツ辻、春が来た.md"},
+      {"no":31,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第31話_二年目の春が来た","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第31話_二年目の春が来た.md"},
+      {"no":32,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第32話_鎌爪竜作戦、準備を始める","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第32話_鎌爪竜作戦、準備を始める.md"},
+      {"no":33,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第33話_廃坑の近くまで、もう一度","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第33話_廃坑の近くまで、もう一度.md"},
+      {"no":34,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第34話_煙作戦、実行","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第34話_煙作戦、実行.md"},
+      {"no":35,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第35話_カネヅカの鉱山師と話した夜","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第35話_カネヅカの鉱山師と話した夜.md"},
+      {"no":36,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第36話_標塔C、見えた","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第36話_標塔C、見えた.md"},
+      {"no":37,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第37話_アサが仕事を覚えた","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第37話_アサが仕事を覚えた.md"},
+      {"no":38,"part":"第2部","chapter":"第1章_外へ踏み出す","title":"第38話_霧の正体を調べに行く","path":"../辺境拠点日誌/第2部/第1章_外へ踏み出す/第38話_霧の正体を調べに行く.md"},
+      {"no":39,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第39話_草毛獣が、増えすぎた","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第39話_草毛獣が、増えすぎた.md"},
+      {"no":40,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第40話_生態系を管理するとはどういうことか","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第40話_生態系を管理するとはどういうことか.md"},
+      {"no":41,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第41話_ハラダの生態師、来る","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第41話_ハラダの生態師、来る.md"},
+      {"no":42,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第42話_拠点の評議会、始まる","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第42話_拠点の評議会、始まる.md"},
+      {"no":43,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第43話_外から来た人間と、内にいる人間","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第43話_外から来た人間と、内にいる人間.md"},
+      {"no":44,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第44話_石積みが、二つ目も見つかった","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第44話_石積みが、二つ目も見つかった.md"},
+      {"no":45,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第45話_父が残した記録","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第45話_父が残した記録.md"},
+      {"no":46,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第46話_誰かに話すということ","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第46話_誰かに話すということ.md"},
+      {"no":47,"part":"第2部","chapter":"第2章_揺れる拠点","title":"第47話_評議会の初仕事：移住者をどう受け入れるか","path":"../辺境拠点日誌/第2部/第2章_揺れる拠点/第47話_評議会の初仕事：移住者をどう受け入れるか.md"},
+      {"no":48,"part":"第2部","chapter":"第3章_地図の外へ","title":"第48話_隊商護衛の依頼が来た","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第48話_隊商護衛の依頼が来た.md"},
+      {"no":49,"part":"第2部","chapter":"第3章_地図の外へ","title":"第49話_地図の外の最初の夜","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第49話_地図の外の最初の夜.md"},
+      {"no":50,"part":"第2部","chapter":"第3章_地図の外へ","title":"第50話_道を塞いでいるものがある","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第50話_道を塞いでいるものがある.md"},
+      {"no":51,"part":"第2部","chapter":"第3章_地図の外へ","title":"第51話_外の集落のこと、ユズキのこと","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第51話_外の集落のこと、ユズキのこと.md"},
+      {"no":52,"part":"第2部","chapter":"第3章_地図の外へ","title":"第52話_旅人ユズキ、三ツ辻に来る","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第52話_旅人ユズキ、三ツ辻に来る.md"},
+      {"no":53,"part":"第2部","chapter":"第3章_地図の外へ","title":"第53話_ユズキと、記録の話をした夜","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第53話_ユズキと、記録の話をした夜.md"},
+      {"no":54,"part":"第2部","chapter":"第3章_地図の外へ","title":"第54話_B番号の地図を作る","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第54話_B番号の地図を作る.md"},
+      {"no":55,"part":"第2部","chapter":"第3章_地図の外へ","title":"第55話_ナルセに会いに行く","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第55話_ナルセに会いに行く.md"},
+      {"no":56,"part":"第2部","chapter":"第3章_地図の外へ","title":"第56話_禁域という言葉","path":"../辺境拠点日誌/第2部/第3章_地図の外へ/第56話_禁域という言葉.md"},
+      {"no":57,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第57話_南南西の標塔を確認する","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第57話_南南西の標塔を確認する.md"},
+      {"no":58,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第58話_大雨と、橋が流された","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第58話_大雨と、橋が流された.md"},
+      {"no":59,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第59話_ガンの代わりを育てる","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第59話_ガンの代わりを育てる.md"},
+      {"no":60,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第60話_三集落合同評議会、初の同席","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第60話_三集落合同評議会、初の同席.md"},
+      {"no":61,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第61話_スズが失敗した","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第61話_スズが失敗した.md"},
+      {"no":62,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第62話_禁域に近づく","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第62話_禁域に近づく.md"},
+      {"no":63,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第63話_禁域の前で考える","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第63話_禁域の前で考える.md"},
+      {"no":64,"part":"第2部","chapter":"第4章_揺らぎと試練","title":"第64話_三ツ辻の二年目が終わる","path":"../辺境拠点日誌/第2部/第4章_揺らぎと試練/第64話_三ツ辻の二年目が終わる.md"},
+      {"no":65,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第65話_大型隊商が三ツ辻を通過した","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第65話_大型隊商が三ツ辻を通過した.md"},
+      {"no":66,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第66話_禁域への道を整える","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第66話_禁域への道を整える.md"},
+      {"no":67,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第67話_禁域の入口を読む","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第67話_禁域の入口を読む.md"},
+      {"no":68,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第68話_カイの体の秘密","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第68話_カイの体の秘密.md"},
+      {"no":69,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第69話_入るかどうかを決める","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第69話_入るかどうかを決める.md"},
+      {"no":70,"part":"第2部","chapter":"第5章_禁域の扉へ","title":"第70話_三年目の春、扉の前へ","path":"../辺境拠点日誌/第2部/第5章_禁域の扉へ/第70話_三年目の春、扉の前へ.md"}
+    ];
+
+    const state = {
+      episodeIndex: 0,
+      paragraphIndex: 0,
+      paragraphs: [],
+      speaking: false,
+      paused: false,
+      stopped: true,
+      loading: false,
+    };
+
+    const els = {
+      title: document.getElementById("title"),
+      meta: document.getElementById("meta"),
+      partSelect: document.getElementById("partSelect"),
+      chapterSelect: document.getElementById("chapterSelect"),
+      episodeSelect: document.getElementById("episodeSelect"),
+      prevButton: document.getElementById("prevButton"),
+      playButton: document.getElementById("playButton"),
+      pauseButton: document.getElementById("pauseButton"),
+      nextButton: document.getElementById("nextButton"),
+      voiceSelect: document.getElementById("voiceSelect"),
+      rateInput: document.getElementById("rateInput"),
+      rateValue: document.getElementById("rateValue"),
+      pitchInput: document.getElementById("pitchInput"),
+      pitchValue: document.getElementById("pitchValue"),
+      reader: document.getElementById("reader"),
+    };
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function stripFrontMatter(markdown) {
+      return markdown.replace(/^\uFEFF?---\s*[\r\n][\s\S]*?[\r\n]---\s*[\r\n]/, "");
+    }
+
+    function markdownToParagraphs(markdown) {
+      const withoutFrontMatter = stripFrontMatter(markdown);
+      const withoutCodeBlocks = withoutFrontMatter.replace(/```[\s\S]*?```/g, "");
+      const lines = withoutCodeBlocks
+        .split(/\r?\n/)
+        .map((line) => {
+          let text = line.trimEnd();
+          if (/^\s*---+\s*$/.test(text)) return "";
+          text = text.replace(/^\s{0,3}#{1,6}\s*/, "");
+          text = text.replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1");
+          text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+          text = text.replace(/`([^`]+)`/g, "$1");
+          text = text.replace(/[*_~]{1,3}/g, "");
+          text = text.replace(/<[^>]+>/g, "");
+          return text;
+        });
+
+      return lines
+        .join("\n")
+        .split(/\n{2,}/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean);
+    }
+
+    function paragraphForSpeech(paragraph) {
+      return paragraph
+        .replace(/｜?([^《》\n]{1,40})《([^》]+)》/g, "$2")
+        .replace(/[「」『』]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function unique(values) {
+      return Array.from(new Set(values));
+    }
+
+    function option(label, value) {
+      return `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`;
+    }
+
+    function populateSelectors() {
+      const parts = unique(EPISODES.map((episode) => episode.part));
+      els.partSelect.innerHTML = parts.map((part) => option(part, part)).join("");
+      updateChapterOptions();
+      updateEpisodeOptions();
+    }
+
+    function updateChapterOptions() {
+      const part = els.partSelect.value || EPISODES[0].part;
+      const chapters = unique(EPISODES.filter((episode) => episode.part === part).map((episode) => episode.chapter));
+      const current = els.chapterSelect.value;
+      els.chapterSelect.innerHTML = chapters.map((chapter) => option(chapter, chapter)).join("");
+      if (chapters.includes(current)) els.chapterSelect.value = current;
+    }
+
+    function updateEpisodeOptions() {
+      const part = els.partSelect.value;
+      const chapter = els.chapterSelect.value;
+      const episodes = EPISODES.filter((episode) => episode.part === part && episode.chapter === chapter);
+      const currentNo = Number(els.episodeSelect.value);
+      els.episodeSelect.innerHTML = episodes.map((episode) => option(episode.title, String(episode.no))).join("");
+      if (episodes.some((episode) => episode.no === currentNo)) els.episodeSelect.value = String(currentNo);
+    }
+
+    function syncSelectors() {
+      const episode = EPISODES[state.episodeIndex];
+      els.partSelect.value = episode.part;
+      updateChapterOptions();
+      els.chapterSelect.value = episode.chapter;
+      updateEpisodeOptions();
+      els.episodeSelect.value = String(episode.no);
+    }
+
+    function populateVoices() {
+      const voices = speechSynthesis.getVoices();
+      const jaVoices = voices.filter((voice) => /^ja(-|_)?/i.test(voice.lang));
+      const visibleVoices = jaVoices.length ? jaVoices : voices;
+      const saved = localStorage.getItem("yahiroTtsVoice") || "";
+      els.voiceSelect.innerHTML = visibleVoices.map((voice) =>
+        option(`${voice.name} (${voice.lang})`, voice.name)
+      ).join("");
+      const preferred = visibleVoices.find((voice) => voice.name === saved)
+        || visibleVoices.find((voice) => /^ja(-|_)?/i.test(voice.lang))
+        || visibleVoices[0];
+      if (preferred) els.voiceSelect.value = preferred.name;
+    }
+
+    function selectedVoice() {
+      const voices = speechSynthesis.getVoices();
+      return voices.find((voice) => voice.name === els.voiceSelect.value) || null;
+    }
+
+    async function loadEpisode(index) {
+      stopSpeech();
+      state.loading = true;
+      state.episodeIndex = Math.max(0, Math.min(index, EPISODES.length - 1));
+      state.paragraphIndex = 0;
+      syncSelectors();
+      renderLoading();
+      updateButtons();
+
+      const episode = EPISODES[state.episodeIndex];
+      try {
+        const response = await fetch(encodeURI(episode.path), { cache: "no-cache" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const markdown = await response.text();
+        state.paragraphs = markdownToParagraphs(markdown);
+        state.loading = false;
+        localStorage.setItem("yahiroTtsEpisodeNo", String(episode.no));
+        renderEpisode();
+      } catch (error) {
+        state.loading = false;
+        state.paragraphs = [];
+        renderError(episode, error);
+      }
+      updateButtons();
+    }
+
+    function renderLoading() {
+      const episode = EPISODES[state.episodeIndex];
+      els.title.textContent = episode.title;
+      els.meta.textContent = `${episode.part} / ${episode.chapter}`;
+      els.reader.innerHTML = `<div class="message">${escapeHtml(episode.title)} を読み込み中です。</div>`;
+    }
+
+    function renderError(episode, error) {
+      els.title.textContent = episode.title;
+      els.meta.textContent = "読み込みに失敗しました";
+      els.reader.innerHTML = `
+        <div class="message">
+          Markdownを読み込めませんでした。GitHub Pagesの公開元がリポジトリルートになっているか確認してください。<br>
+          ${escapeHtml(episode.path)}<br>
+          ${escapeHtml(String(error.message || error))}
+        </div>
+      `;
+    }
+
+    function renderEpisode() {
+      const episode = EPISODES[state.episodeIndex];
+      els.title.textContent = episode.title;
+      els.meta.textContent = `${state.paragraphIndex + 1} / ${state.paragraphs.length}  ${episode.part} / ${episode.chapter}`;
+      els.reader.innerHTML = `
+        <h2 class="episode-heading">${escapeHtml(episode.title)}</h2>
+        ${state.paragraphs.map((paragraph, index) => {
+          const classes = [
+            "paragraph",
+            /^[「『（(]/.test(paragraph) ? "no-indent" : "",
+            index === state.paragraphIndex ? "current" : "",
+          ].filter(Boolean).join(" ");
+          return `<p class="${classes}" data-index="${index}">${escapeHtml(paragraph)}</p>`;
+        }).join("")}
+      `;
+      scrollCurrentParagraph();
+    }
+
+    function highlightCurrentParagraph() {
+      document.querySelectorAll(".paragraph").forEach((paragraph) => {
+        paragraph.classList.toggle("current", Number(paragraph.dataset.index) === state.paragraphIndex);
+      });
+      const episode = EPISODES[state.episodeIndex];
+      els.meta.textContent = `${state.paragraphIndex + 1} / ${state.paragraphs.length}  ${episode.part} / ${episode.chapter}`;
+      scrollCurrentParagraph();
+      updateButtons();
+    }
+
+    function scrollCurrentParagraph() {
+      const current = document.querySelector(".paragraph.current");
+      if (current) current.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    function speakCurrentParagraph() {
+      if (!state.paragraphs.length) return;
+      speechSynthesis.cancel();
+      state.stopped = false;
+
+      const text = paragraphForSpeech(state.paragraphs[state.paragraphIndex]);
+      if (!text) {
+        moveParagraph(1, true);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = selectedVoice();
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "ja-JP";
+      utterance.rate = Number(els.rateInput.value);
+      utterance.pitch = Number(els.pitchInput.value);
+
+      state.speaking = true;
+      state.paused = false;
+      highlightCurrentParagraph();
+
+      utterance.onend = () => {
+        if (state.stopped) return;
+        state.speaking = false;
+        state.paused = false;
+        moveParagraph(1, true);
+      };
+      utterance.onerror = () => {
+        if (state.stopped) return;
+        state.speaking = false;
+        state.paused = false;
+        updateButtons();
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    function playSpeech() {
+      if (state.loading || !state.paragraphs.length) return;
+      if (state.paused) {
+        speechSynthesis.resume();
+        state.paused = false;
+        state.speaking = true;
+        updateButtons();
+        return;
+      }
+      speakCurrentParagraph();
+    }
+
+    function pauseSpeech() {
+      if (!state.speaking) return;
+      speechSynthesis.pause();
+      state.paused = true;
+      updateButtons();
+    }
+
+    function stopSpeech() {
+      state.stopped = true;
+      state.speaking = false;
+      state.paused = false;
+      speechSynthesis.cancel();
+    }
+
+    function moveParagraph(delta, autoPlay) {
+      const next = state.paragraphIndex + delta;
+      if (next >= 0 && next < state.paragraphs.length) {
+        state.paragraphIndex = next;
+        highlightCurrentParagraph();
+        if (autoPlay) speakCurrentParagraph();
+        return;
+      }
+
+      if (delta > 0 && state.episodeIndex < EPISODES.length - 1) {
+        loadEpisode(state.episodeIndex + 1).then(() => {
+          if (autoPlay) speakCurrentParagraph();
+        });
+        return;
+      }
+
+      stopSpeech();
+      updateButtons();
+    }
+
+    function changeEpisode(delta) {
+      const next = state.episodeIndex + delta;
+      if (next < 0 || next >= EPISODES.length) return;
+      loadEpisode(next);
+    }
+
+    function updateButtons() {
+      const canPlay = !state.loading && state.paragraphs.length > 0;
+      els.prevButton.disabled = state.loading || state.episodeIndex <= 0;
+      els.nextButton.disabled = state.loading || state.episodeIndex >= EPISODES.length - 1;
+      els.playButton.disabled = !canPlay || (state.speaking && !state.paused);
+      els.pauseButton.disabled = !state.speaking || state.paused;
+    }
+
+    els.partSelect.addEventListener("change", () => {
+      updateChapterOptions();
+      updateEpisodeOptions();
+      const first = EPISODES.find((episode) =>
+        episode.part === els.partSelect.value && episode.chapter === els.chapterSelect.value
+      );
+      if (first) loadEpisode(EPISODES.indexOf(first));
+    });
+
+    els.chapterSelect.addEventListener("change", () => {
+      updateEpisodeOptions();
+      const first = EPISODES.find((episode) =>
+        episode.part === els.partSelect.value && episode.chapter === els.chapterSelect.value
+      );
+      if (first) loadEpisode(EPISODES.indexOf(first));
+    });
+
+    els.episodeSelect.addEventListener("change", () => {
+      const no = Number(els.episodeSelect.value);
+      const index = EPISODES.findIndex((episode) => episode.no === no);
+      if (index >= 0) loadEpisode(index);
+    });
+
+    els.prevButton.addEventListener("click", () => changeEpisode(-1));
+    els.nextButton.addEventListener("click", () => changeEpisode(1));
+    els.playButton.addEventListener("click", playSpeech);
+    els.pauseButton.addEventListener("click", pauseSpeech);
+
+    els.reader.addEventListener("click", (event) => {
+      const paragraph = event.target.closest(".paragraph");
+      if (!paragraph) return;
+      stopSpeech();
+      state.paragraphIndex = Number(paragraph.dataset.index);
+      highlightCurrentParagraph();
+    });
+
+    els.rateInput.addEventListener("input", () => {
+      els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+      localStorage.setItem("yahiroTtsRate", els.rateInput.value);
+    });
+    els.pitchInput.addEventListener("input", () => {
+      els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+      localStorage.setItem("yahiroTtsPitch", els.pitchInput.value);
+    });
+    els.voiceSelect.addEventListener("change", () => {
+      localStorage.setItem("yahiroTtsVoice", els.voiceSelect.value);
+    });
+
+    const savedRate = localStorage.getItem("yahiroTtsRate");
+    const savedPitch = localStorage.getItem("yahiroTtsPitch");
+    if (savedRate) els.rateInput.value = savedRate;
+    if (savedPitch) els.pitchInput.value = savedPitch;
+    els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+    els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+
+    populateSelectors();
+    populateVoices();
+    speechSynthesis.addEventListener("voiceschanged", populateVoices);
+
+    const savedNo = Number(localStorage.getItem("yahiroTtsEpisodeNo") || "1");
+    const initialIndex = Math.max(0, EPISODES.findIndex((episode) => episode.no === savedNo));
+    loadEpisode(initialIndex);
+  </script>
+</body>
+</html>

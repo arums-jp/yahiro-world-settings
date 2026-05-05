@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小説読み上げプレイヤー</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7f6;
+      --panel: #ffffff;
+      --panel-soft: #eef3f1;
+      --text: #17211f;
+      --muted: #66716e;
+      --line: #d7dfdc;
+      --accent: #0f766e;
+      --accent-strong: #0b5e58;
+      --accent-soft: #d9efeb;
+      --warn: #b45309;
+      --shadow: 0 12px 28px rgba(23, 33, 31, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--panel-soft);
+      border-color: #b9c8c3;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .primary:hover:not(:disabled) {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      gap: 12px;
+      min-height: 100vh;
+      padding: 16px;
+      border-right: 1px solid var(--line);
+      background: #fbfcfc;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .file-button {
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .file-button:hover {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+    }
+
+    .file-button input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .episode-list {
+      min-height: 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .episode {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 9px 10px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      text-align: left;
+    }
+
+    .episode:last-child {
+      border-bottom: 0;
+    }
+
+    .episode.active {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding-left: 6px;
+    }
+
+    .episode-title {
+      display: block;
+      overflow: hidden;
+      color: var(--text);
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .episode-path {
+      display: block;
+      overflow: hidden;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .main {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-width: 0;
+      min-height: 100vh;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      z-index: 1;
+    }
+
+    .now {
+      min-width: 0;
+    }
+
+    .now-title {
+      overflow: hidden;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .now-meta {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .controls button {
+      min-width: 44px;
+      padding: 0 10px;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: minmax(150px, 260px) 160px 120px auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfc;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label,
+    .check {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 0 8px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      white-space: nowrap;
+    }
+
+    .reader {
+      min-height: 0;
+      overflow: auto;
+      padding: 28px min(7vw, 72px) 64px;
+    }
+
+    .document {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .document h2 {
+      margin: 0 0 24px;
+      font-size: 25px;
+      line-height: 1.45;
+    }
+
+    .paragraph {
+      margin: 0 0 0.55em;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 18px;
+      line-height: 1.8;
+      text-indent: 1em;
+      white-space: pre-wrap;
+    }
+
+    .paragraph.no-indent {
+      text-indent: 0;
+    }
+
+    .paragraph.current {
+      background: #fff6d8;
+      box-shadow: inset 4px 0 0 var(--warn);
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 50vh;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        min-height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .episode-list {
+        max-height: 240px;
+      }
+
+      .toolbar,
+      .settings {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .brand {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .settings {
+        grid-template-columns: 1fr;
+      }
+
+      .reader {
+        padding: 20px 12px 48px;
+      }
+
+      .paragraph {
+        font-size: 16px;
+        line-height: 1.8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>小説読み上げ</h1>
+        <label class="file-button">
+          フォルダを選択
+          <input id="folderInput" type="file" webkitdirectory directory multiple accept=".md,.markdown,text/markdown">
+        </label>
+      </div>
+      <div id="status" class="status">Markdownが未選択です</div>
+      <div id="episodeList" class="episode-list" aria-label="話数一覧"></div>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <div class="now">
+          <div id="nowTitle" class="now-title">未選択</div>
+          <div id="nowMeta" class="now-meta">0 / 0</div>
+        </div>
+        <div class="controls">
+          <button id="prevEpisodeButton" title="前の話">前話</button>
+          <button id="prevParagraphButton" title="前の段落">前段落</button>
+          <button id="playButton" class="primary" title="再生">再生</button>
+          <button id="pauseButton" title="一時停止">一時停止</button>
+          <button id="stopButton" title="停止">停止</button>
+          <button id="nextParagraphButton" title="次の段落">次段落</button>
+          <button id="nextEpisodeButton" title="次の話">次話</button>
+        </div>
+      </div>
+
+      <div class="settings">
+        <div class="field">
+          <label for="voiceSelect">音声</label>
+          <select id="voiceSelect"></select>
+        </div>
+        <div class="field">
+          <label for="rateInput">速度 <span id="rateValue">1.0</span></label>
+          <input id="rateInput" type="range" min="0.6" max="1.4" step="0.05" value="1">
+        </div>
+        <div class="field">
+          <label for="pitchInput">高さ <span id="pitchValue">1.0</span></label>
+          <input id="pitchInput" type="range" min="0.7" max="1.3" step="0.05" value="1">
+        </div>
+        <label class="check">
+          <input id="autoAdvanceInput" type="checkbox" checked>
+          次話へ進む
+        </label>
+      </div>
+
+      <section id="reader" class="reader" aria-live="polite">
+        <div class="empty">Markdownを読み込んでください</div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const state = {
+      episodes: [],
+      currentEpisodeIndex: -1,
+      currentParagraphIndex: 0,
+      paragraphs: [],
+      speaking: false,
+      paused: false,
+      manualStop: false,
+    };
+
+    const els = {
+      folderInput: document.getElementById("folderInput"),
+      status: document.getElementById("status"),
+      episodeList: document.getElementById("episodeList"),
+      nowTitle: document.getElementById("nowTitle"),
+      nowMeta: document.getElementById("nowMeta"),
+      reader: document.getElementById("reader"),
+      voiceSelect: document.getElementById("voiceSelect"),
+      rateInput: document.getElementById("rateInput"),
+      rateValue: document.getElementById("rateValue"),
+      pitchInput: document.getElementById("pitchInput"),
+      pitchValue: document.getElementById("pitchValue"),
+      autoAdvanceInput: document.getElementById("autoAdvanceInput"),
+      prevEpisodeButton: document.getElementById("prevEpisodeButton"),
+      prevParagraphButton: document.getElementById("prevParagraphButton"),
+      playButton: document.getElementById("playButton"),
+      pauseButton: document.getElementById("pauseButton"),
+      stopButton: document.getElementById("stopButton"),
+      nextParagraphButton: document.getElementById("nextParagraphButton"),
+      nextEpisodeButton: document.getElementById("nextEpisodeButton"),
+    };
+
+    function toHalfWidthDigits(value) {
+      return value.replace(/[０-９]/g, (char) =>
+        String.fromCharCode(char.charCodeAt(0) - 0xfee0)
+      );
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function normalizePath(file) {
+      return file.webkitRelativePath || file.name;
+    }
+
+    function episodeNumberFromPath(path) {
+      const match = path.match(/第([0-9０-９]+)話/);
+      return match ? Number(toHalfWidthDigits(match[1])) : Number.MAX_SAFE_INTEGER;
+    }
+
+    function titleFromMarkdown(markdown, fallbackPath) {
+      const heading = markdown.match(/^#\s+(.+)$/m);
+      if (heading) return heading[1].trim();
+      return fallbackPath.split(/[\\/]/).pop().replace(/\.(md|markdown)$/i, "");
+    }
+
+    function stripFrontMatter(markdown) {
+      return markdown.replace(/^\uFEFF?---\s*[\r\n][\s\S]*?[\r\n]---\s*[\r\n]/, "");
+    }
+
+    function markdownToParagraphs(markdown) {
+      const withoutFrontMatter = stripFrontMatter(markdown);
+      const withoutCodeBlocks = withoutFrontMatter.replace(/```[\s\S]*?```/g, "");
+      const lines = withoutCodeBlocks
+        .split(/\r?\n/)
+        .map((line) => {
+          let text = line.trimEnd();
+          if (/^\s*---+\s*$/.test(text)) return "";
+          text = text.replace(/^\s{0,3}#{1,6}\s*/, "");
+          text = text.replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1");
+          text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+          text = text.replace(/`([^`]+)`/g, "$1");
+          text = text.replace(/[*_~]{1,3}/g, "");
+          text = text.replace(/<[^>]+>/g, "");
+          return text;
+        });
+
+      return lines
+        .join("\n")
+        .split(/\n{2,}/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean);
+    }
+
+    function paragraphForSpeech(paragraph) {
+      return paragraph
+        .replace(/｜?([^《》\n]{1,40})《([^》]+)》/g, "$2")
+        .replace(/[「」『』]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    async function loadEpisodes(files) {
+      stopSpeech();
+      const markdownFiles = files
+        .filter((file) => /\.(md|markdown)$/i.test(file.name))
+        .map((file) => ({ file, path: normalizePath(file), episodeNumber: episodeNumberFromPath(normalizePath(file)) }))
+        .filter((item) => item.episodeNumber !== Number.MAX_SAFE_INTEGER)
+        .sort((a, b) => a.episodeNumber - b.episodeNumber || a.path.localeCompare(b.path, "ja"));
+
+      const episodes = [];
+      for (const item of markdownFiles) {
+        const markdown = await item.file.text();
+        episodes.push({
+          path: item.path,
+          title: titleFromMarkdown(markdown, item.path),
+          episodeNumber: item.episodeNumber,
+          markdown,
+        });
+      }
+
+      state.episodes = episodes;
+      state.currentEpisodeIndex = episodes.length ? 0 : -1;
+      state.currentParagraphIndex = 0;
+      renderEpisodeList();
+      selectEpisode(state.currentEpisodeIndex);
+      setStatus(episodes.length ? `${episodes.length}話を読み込みました` : "話数ファイルが見つかりません");
+      updateButtons();
+    }
+
+    function setStatus(text) {
+      els.status.textContent = text;
+    }
+
+    function renderEpisodeList() {
+      els.episodeList.innerHTML = state.episodes.map((episode, index) => `
+        <button class="episode" data-index="${index}">
+          <span class="episode-title">${escapeHtml(episode.title)}</span>
+          <span class="episode-path">${escapeHtml(episode.path)}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderReader() {
+      if (state.currentEpisodeIndex < 0) {
+        els.reader.innerHTML = '<div class="empty">Markdownを読み込んでください</div>';
+        els.nowTitle.textContent = "未選択";
+        els.nowMeta.textContent = "0 / 0";
+        return;
+      }
+
+      const episode = state.episodes[state.currentEpisodeIndex];
+      els.nowTitle.textContent = episode.title;
+      els.nowMeta.textContent = `${state.currentParagraphIndex + 1} / ${state.paragraphs.length}  ${episode.path}`;
+      els.reader.innerHTML = `
+        <div class="document">
+          <h2>${escapeHtml(episode.title)}</h2>
+          ${state.paragraphs.map((paragraph, index) => {
+            const classes = [
+              "paragraph",
+              /^[「『（(]/.test(paragraph) ? "no-indent" : "",
+              index === state.currentParagraphIndex ? " current" : "",
+            ].join(" ").trim();
+            return `<p class="${classes}" data-index="${index}">${escapeHtml(paragraph)}</p>`;
+          }).join("")}
+        </div>
+      `;
+      scrollCurrentParagraphIntoView();
+    }
+
+    function selectEpisode(index) {
+      if (index < 0 || index >= state.episodes.length) {
+        state.paragraphs = [];
+        renderReader();
+        updateButtons();
+        return;
+      }
+      stopSpeech();
+      state.currentEpisodeIndex = index;
+      state.currentParagraphIndex = 0;
+      state.paragraphs = markdownToParagraphs(state.episodes[index].markdown);
+      document.querySelectorAll(".episode").forEach((button) => {
+        button.classList.toggle("active", Number(button.dataset.index) === index);
+      });
+      renderReader();
+      updateButtons();
+    }
+
+    function highlightCurrentParagraph() {
+      document.querySelectorAll(".paragraph").forEach((paragraph) => {
+        paragraph.classList.toggle("current", Number(paragraph.dataset.index) === state.currentParagraphIndex);
+      });
+      if (state.currentEpisodeIndex >= 0) {
+        const episode = state.episodes[state.currentEpisodeIndex];
+        els.nowMeta.textContent = `${state.currentParagraphIndex + 1} / ${state.paragraphs.length}  ${episode.path}`;
+      }
+      scrollCurrentParagraphIntoView();
+      updateButtons();
+    }
+
+    function scrollCurrentParagraphIntoView() {
+      const current = els.reader.querySelector(".paragraph.current");
+      if (current) current.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    function selectedVoice() {
+      const voices = speechSynthesis.getVoices();
+      return voices.find((voice) => voice.name === els.voiceSelect.value) || null;
+    }
+
+    function populateVoices() {
+      const voices = speechSynthesis.getVoices();
+      const japaneseVoices = voices.filter((voice) => /^ja(-|_)?/i.test(voice.lang));
+      const visibleVoices = japaneseVoices.length ? japaneseVoices : voices;
+      const previousValue = els.voiceSelect.value || localStorage.getItem("novelTtsVoice") || "";
+      els.voiceSelect.innerHTML = visibleVoices.map((voice) => `
+        <option value="${escapeHtml(voice.name)}">${escapeHtml(`${voice.name} (${voice.lang})`)}</option>
+      `).join("");
+
+      const preferred = visibleVoices.find((voice) => voice.name === previousValue)
+        || visibleVoices.find((voice) => voice.lang.toLowerCase().startsWith("ja"))
+        || visibleVoices[0];
+      if (preferred) els.voiceSelect.value = preferred.name;
+    }
+
+    function speakCurrentParagraph() {
+      if (!state.paragraphs.length) return;
+      speechSynthesis.cancel();
+
+      const text = paragraphForSpeech(state.paragraphs[state.currentParagraphIndex]);
+      if (!text) {
+        moveParagraph(1, true);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = selectedVoice();
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "ja-JP";
+      utterance.rate = Number(els.rateInput.value);
+      utterance.pitch = Number(els.pitchInput.value);
+
+      state.speaking = true;
+      state.paused = false;
+      state.manualStop = false;
+      highlightCurrentParagraph();
+      updateButtons();
+
+      utterance.onend = () => {
+        if (state.manualStop) return;
+        state.speaking = false;
+        state.paused = false;
+        moveParagraph(1, true);
+      };
+      utterance.onerror = () => {
+        if (state.manualStop) return;
+        state.speaking = false;
+        state.paused = false;
+        setStatus("読み上げを開始できませんでした");
+        updateButtons();
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    function playSpeech() {
+      if (!state.paragraphs.length) return;
+      if (state.paused) {
+        speechSynthesis.resume();
+        state.paused = false;
+        state.speaking = true;
+        updateButtons();
+        return;
+      }
+      speakCurrentParagraph();
+    }
+
+    function pauseSpeech() {
+      if (!state.speaking) return;
+      speechSynthesis.pause();
+      state.paused = true;
+      updateButtons();
+    }
+
+    function stopSpeech() {
+      state.manualStop = true;
+      state.speaking = false;
+      state.paused = false;
+      speechSynthesis.cancel();
+      updateButtons();
+    }
+
+    function moveParagraph(delta, autoPlay) {
+      if (!state.paragraphs.length) return;
+      const nextIndex = state.currentParagraphIndex + delta;
+      if (nextIndex >= 0 && nextIndex < state.paragraphs.length) {
+        state.currentParagraphIndex = nextIndex;
+        highlightCurrentParagraph();
+        if (autoPlay) speakCurrentParagraph();
+        return;
+      }
+
+      if (delta > 0 && els.autoAdvanceInput.checked && state.currentEpisodeIndex < state.episodes.length - 1) {
+        const nextEpisodeIndex = state.currentEpisodeIndex + 1;
+        selectEpisode(nextEpisodeIndex);
+        if (autoPlay) speakCurrentParagraph();
+        return;
+      }
+
+      stopSpeech();
+    }
+
+    function moveEpisode(delta, autoPlay) {
+      const nextIndex = state.currentEpisodeIndex + delta;
+      if (nextIndex < 0 || nextIndex >= state.episodes.length) return;
+      selectEpisode(nextIndex);
+      if (autoPlay) speakCurrentParagraph();
+    }
+
+    function updateButtons() {
+      const hasEpisode = state.currentEpisodeIndex >= 0;
+      const hasParagraph = state.paragraphs.length > 0;
+      els.prevEpisodeButton.disabled = !hasEpisode || state.currentEpisodeIndex <= 0;
+      els.nextEpisodeButton.disabled = !hasEpisode || state.currentEpisodeIndex >= state.episodes.length - 1;
+      els.prevParagraphButton.disabled = !hasParagraph || state.currentParagraphIndex <= 0;
+      els.nextParagraphButton.disabled = !hasParagraph || (
+        state.currentParagraphIndex >= state.paragraphs.length - 1
+        && (!els.autoAdvanceInput.checked || state.currentEpisodeIndex >= state.episodes.length - 1)
+      );
+      els.playButton.disabled = !hasParagraph || state.speaking && !state.paused;
+      els.pauseButton.disabled = !state.speaking || state.paused;
+      els.stopButton.disabled = !state.speaking && !state.paused;
+    }
+
+    els.folderInput.addEventListener("change", (event) => {
+      loadEpisodes(Array.from(event.target.files || []));
+    });
+
+    els.episodeList.addEventListener("click", (event) => {
+      const button = event.target.closest(".episode");
+      if (!button) return;
+      selectEpisode(Number(button.dataset.index));
+    });
+
+    els.reader.addEventListener("click", (event) => {
+      const paragraph = event.target.closest(".paragraph");
+      if (!paragraph) return;
+      stopSpeech();
+      state.currentParagraphIndex = Number(paragraph.dataset.index);
+      highlightCurrentParagraph();
+    });
+
+    els.playButton.addEventListener("click", playSpeech);
+    els.pauseButton.addEventListener("click", pauseSpeech);
+    els.stopButton.addEventListener("click", stopSpeech);
+    els.prevParagraphButton.addEventListener("click", () => {
+      stopSpeech();
+      moveParagraph(-1, false);
+    });
+    els.nextParagraphButton.addEventListener("click", () => {
+      stopSpeech();
+      moveParagraph(1, false);
+    });
+    els.prevEpisodeButton.addEventListener("click", () => moveEpisode(-1, false));
+    els.nextEpisodeButton.addEventListener("click", () => moveEpisode(1, false));
+
+    els.rateInput.addEventListener("input", () => {
+      els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+      localStorage.setItem("novelTtsRate", els.rateInput.value);
+    });
+    els.pitchInput.addEventListener("input", () => {
+      els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+      localStorage.setItem("novelTtsPitch", els.pitchInput.value);
+    });
+    els.voiceSelect.addEventListener("change", () => {
+      localStorage.setItem("novelTtsVoice", els.voiceSelect.value);
+    });
+    els.autoAdvanceInput.addEventListener("change", updateButtons);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.matches("input, select, button")) return;
+      if (event.code === "Space") {
+        event.preventDefault();
+        state.speaking && !state.paused ? pauseSpeech() : playSpeech();
+      }
+      if (event.key === "ArrowRight") {
+        stopSpeech();
+        moveParagraph(1, false);
+      }
+      if (event.key === "ArrowLeft") {
+        stopSpeech();
+        moveParagraph(-1, false);
+      }
+    });
+
+    const savedRate = localStorage.getItem("novelTtsRate");
+    const savedPitch = localStorage.getItem("novelTtsPitch");
+    if (savedRate) els.rateInput.value = savedRate;
+    if (savedPitch) els.pitchInput.value = savedPitch;
+    els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+    els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+
+    populateVoices();
+    speechSynthesis.addEventListener("voiceschanged", populateVoices);
+    updateButtons();
+  </script>
+</body>
+</html>
