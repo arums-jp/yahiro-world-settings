@@ -138,6 +138,13 @@
       font-size: 12px;
     }
 
+    .wake-status {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
     .voice-field {
       grid-column: 1 / -1;
     }
@@ -333,12 +340,13 @@
         </div>
         <div class="field">
           <label for="rateInput">速度 <span id="rateValue">1.00</span></label>
-          <input id="rateInput" type="range" min="0.65" max="1.35" step="0.05" value="1">
+          <input id="rateInput" type="range" min="0.65" max="1.50" step="0.05" value="1">
         </div>
         <div class="field">
           <label for="pitchInput">高さ <span id="pitchValue">1.00</span></label>
           <input id="pitchInput" type="range" min="0.75" max="1.25" step="0.05" value="1">
         </div>
+        <div id="wakeStatus" class="wake-status">画面維持: 待機中</div>
       </div>
     </header>
 
@@ -452,6 +460,7 @@
       stopped: true,
       loading: false,
       noteContext: null,
+      wakeLock: null,
     };
 
     const els = {
@@ -471,6 +480,7 @@
       rateValue: document.getElementById("rateValue"),
       pitchInput: document.getElementById("pitchInput"),
       pitchValue: document.getElementById("pitchValue"),
+      wakeStatus: document.getElementById("wakeStatus"),
       reader: document.getElementById("reader"),
       noteDialog: document.getElementById("noteDialog"),
       noteDialogTitle: document.getElementById("noteDialogTitle"),
@@ -726,8 +736,54 @@
       return voices.find((voice) => voice.name === els.voiceSelect.value) || null;
     }
 
-    async function loadEpisode(index) {
-      stopSpeech();
+    function updateWakeLockStatus(message) {
+      if (message) {
+        els.wakeStatus.textContent = message;
+        return;
+      }
+      if (!("wakeLock" in navigator)) {
+        els.wakeStatus.textContent = "画面維持: このブラウザでは非対応";
+        return;
+      }
+      els.wakeStatus.textContent = state.wakeLock ? "画面維持: 有効" : "画面維持: 待機中";
+    }
+
+    async function requestWakeLock() {
+      if (!("wakeLock" in navigator)) {
+        updateWakeLockStatus();
+        return;
+      }
+      if (state.wakeLock || document.visibilityState !== "visible") return;
+
+      try {
+        const lock = await navigator.wakeLock.request("screen");
+        state.wakeLock = lock;
+        lock.addEventListener("release", () => {
+          if (state.wakeLock === lock) state.wakeLock = null;
+          updateWakeLockStatus();
+        });
+        updateWakeLockStatus();
+      } catch (error) {
+        state.wakeLock = null;
+        updateWakeLockStatus(`画面維持: 取得できませんでした (${error.name || "Error"})`);
+      }
+    }
+
+    async function releaseWakeLock() {
+      const lock = state.wakeLock;
+      state.wakeLock = null;
+      if (lock) {
+        try {
+          await lock.release();
+        } catch {
+          // The browser may have already released it.
+        }
+      }
+      updateWakeLockStatus();
+    }
+
+    async function loadEpisode(index, keepWakeLock = false) {
+      stopSpeech(!keepWakeLock);
       state.loading = true;
       state.episodeIndex = Math.max(0, Math.min(index, EPISODES.length - 1));
       state.paragraphIndex = 0;
@@ -842,8 +898,9 @@
       speechSynthesis.speak(utterance);
     }
 
-    function playSpeech() {
+    async function playSpeech() {
       if (state.loading || !state.paragraphs.length) return;
+      await requestWakeLock();
       if (state.paused) {
         speechSynthesis.resume();
         state.paused = false;
@@ -861,11 +918,12 @@
       updateButtons();
     }
 
-    function stopSpeech() {
+    function stopSpeech(releaseLock = true) {
       state.stopped = true;
       state.speaking = false;
       state.paused = false;
       speechSynthesis.cancel();
+      if (releaseLock) releaseWakeLock();
     }
 
     function moveParagraph(delta, autoPlay) {
@@ -878,7 +936,7 @@
       }
 
       if (delta > 0 && state.episodeIndex < EPISODES.length - 1) {
-        loadEpisode(state.episodeIndex + 1).then(() => {
+        loadEpisode(state.episodeIndex + 1, true).then(() => {
           if (autoPlay) speakCurrentParagraph();
         });
         return;
@@ -945,6 +1003,13 @@
     els.noteDialog.addEventListener("click", (event) => {
       if (event.target === els.noteDialog) closeNoteDialog();
     });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        if (state.speaking && !state.paused && !state.stopped) requestWakeLock();
+      } else {
+        releaseWakeLock();
+      }
+    });
 
     els.reader.addEventListener("click", (event) => {
       const paragraph = event.target.closest(".paragraph");
@@ -975,6 +1040,7 @@
 
     populateSelectors();
     populateVoices();
+    updateWakeLockStatus();
     speechSynthesis.addEventListener("voiceschanged", populateVoices);
 
     const savedNo = Number(localStorage.getItem("yahiroTtsEpisodeNo") || "1");
