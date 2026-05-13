@@ -3,84 +3,18 @@
   "localCount": 71,
   "missingRemote": [],
   "duplicateRemote": [],
-  "diffCount": 24,
+  "diffCount": 12,
   "diffs": [
     {
-      "number": 1,
+      "number": 3,
       "kind": "published",
-      "id": "28972299",
+      "id": "28972305",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第1話　三ツ辻、始まります（？）",
-      "remoteTitle": "第1話　三ツ辻、始まります（？）",
-      "localLen": 5381,
-      "remoteLen": 5386
-    },
-    {
-      "number": 2,
-      "kind": "published",
-      "id": "28972303",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第2話　まず、柵を作ろう",
-      "remoteTitle": "第2話　まず、柵を作ろう",
-      "localLen": 4637,
-      "remoteLen": 4533
-    },
-    {
-      "number": 5,
-      "kind": "published",
-      "id": "28972307",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第5話　食料はどこから来るのか",
-      "remoteTitle": "第5話　食料はどこから来るのか",
-      "localLen": 4423,
-      "remoteLen": 4362
-    },
-    {
-      "number": 6,
-      "kind": "published",
-      "id": "28972308",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第6話　長老ヤエ、ご視察に来る",
-      "remoteTitle": "第6話　長老ヤエ、ご視察に来る",
-      "localLen": 3870,
-      "remoteLen": 3683
-    },
-    {
-      "number": 7,
-      "kind": "published",
-      "id": "28972309",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第7話　初めての嵐",
-      "remoteTitle": "第7話　初めての嵐",
-      "localLen": 4155,
-      "remoteLen": 4003
-    },
-    {
-      "number": 9,
-      "kind": "published",
-      "id": "28972311",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第9話　役割を決める",
-      "remoteTitle": "第9話　役割を決める",
-      "localLen": 3783,
-      "remoteLen": 3694
-    },
-    {
-      "number": 10,
-      "kind": "published",
-      "id": "28972312",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第10話　建設仕事を引き継ぐ",
-      "remoteTitle": "第10話　建設仕事を引き継ぐ",
-      "localLen": 4219,
-      "remoteLen": 3962
+      "localTitle": "第3話　寝る場所を作る",
+      "remoteTitle": "第3話　寝る場所を作る",
+      "localLen": 4228,
+      "remoteLen": 4238
     },
     {
       "number": 13,
@@ -91,51 +25,40 @@
       "localTitle": "第13話　ガンとタケオのこと",
       "remoteTitle": "第13話　ガンとタケオのこと",
       "localLen": 3246,
-      "remoteLen": 3251
+      "remoteLen": 3246
     },
     {
-      "number": 14,
+      "number": 15,
       "kind": "published",
-      "id": "28972319",
+      "id": "28972322",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第14話　野廻りの地図を作る",
-      "remoteTitle": "第14話　野廻りの地図を作る",
-      "localLen": 3680,
-      "remoteLen": 3633
+      "localTitle": "第15話　初めての集落からの依頼",
+      "remoteTitle": "第15話　初めての集落からの依頼",
+      "localLen": 3758,
+      "remoteLen": 3753
     },
     {
-      "number": 17,
+      "number": 16,
       "kind": "published",
-      "id": "28972326",
+      "id": "28972325",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第17話　お風呂と、便所と、ノシ草のこと",
-      "remoteTitle": "第17話　お風呂と、便所と、ノシ草のこと",
-      "localLen": 4737,
-      "remoteLen": 4696
+      "localTitle": "第16話　井戸、完成する",
+      "remoteTitle": "第16話　井戸、完成する",
+      "localLen": 3486,
+      "remoteLen": 3440
     },
     {
-      "number": 19,
+      "number": 20,
       "kind": "published",
-      "id": "28972328",
+      "id": "28972329",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第19話　カネヅカから、偵察依頼",
-      "remoteTitle": "第19話　カネヅカから、偵察依頼",
-      "localLen": 4092,
-      "remoteLen": 4035
-    },
-    {
-      "number": 21,
-      "kind": "published",
-      "id": "28972330",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第21話　音で戦う罠を作る",
-      "remoteTitle": "第21話　音で戦う罠を作る",
-      "localLen": 4328,
-      "remoteLen": 4279
+      "localTitle": "第20話　針鼠狼の縄張りを知る",
+      "remoteTitle": "第20話　針鼠狼の縄張りを知る",
+      "localLen": 3823,
+      "remoteLen": 3822
     },
     {
       "number": 22,
@@ -145,8 +68,8 @@
       "bodyDiff": true,
       "localTitle": "第22話　ナル川を、どうにかしたい",
       "remoteTitle": "第22話　ナル川を、どうにかしたい",
-      "localLen": 3468,
-      "remoteLen": 3394
+      "localLen": 3444,
+      "remoteLen": 3468
     },
     {
       "number": 23,
@@ -156,52 +79,30 @@
       "bodyDiff": true,
       "localTitle": "第23話　橋を、かけた",
       "remoteTitle": "第23話　橋を、かけた",
-      "localLen": 2759,
-      "remoteLen": 2697
+      "localLen": 2581,
+      "remoteLen": 2759
     },
     {
-      "number": 25,
+      "number": 24,
       "kind": "published",
-      "id": "28972334",
+      "id": "28972333",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第25話　冬の準備",
-      "remoteTitle": "第25話　冬の準備",
-      "localLen": 5505,
-      "remoteLen": 5309
+      "localTitle": "第24話　秋の夜、石積みの文字",
+      "remoteTitle": "第24話　秋の夜、石積みの文字",
+      "localLen": 4852,
+      "remoteLen": 4817
     },
     {
-      "number": 26,
+      "number": 29,
       "kind": "published",
-      "id": "28972335",
+      "id": "28972339",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第26話　冬の見張りは辛い",
-      "remoteTitle": "第26話　冬の見張りは辛い",
-      "localLen": 3701,
-      "remoteLen": 3590
-    },
-    {
-      "number": 27,
-      "kind": "published",
-      "id": "28972336",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第27話　春の気配と、新しい問題",
-      "remoteTitle": "第27話　春の気配と、新しい問題",
-      "localLen": 3350,
-      "remoteLen": 3264
-    },
-    {
-      "number": 31,
-      "kind": "draft",
-      "id": "7011851",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第31話　三ツ辻、春が来た",
-      "remoteTitle": "第31話　三ツ辻、春が来た",
-      "localLen": 3486,
-      "remoteLen": 3348
+      "localTitle": "第29話　三集落が、拠点を見る目が変わった",
+      "remoteTitle": "第29話　三集落が、拠点を見る目が変わった",
+      "localLen": 3129,
+      "remoteLen": 3117
     },
     {
       "number": 32,
@@ -211,41 +112,19 @@
       "bodyDiff": true,
       "localTitle": "第32話　二年目の春が来た",
       "remoteTitle": "第32話　二年目の春が来た",
-      "localLen": 5033,
-      "remoteLen": 5030
+      "localLen": 5016,
+      "remoteLen": 5033
     },
     {
-      "number": 37,
+      "number": 39,
       "kind": "draft",
-      "id": "7011859",
+      "id": "7011861",
       "titleDiff": false,
       "bodyDiff": true,
-      "localTitle": "第37話　北東の塔、見えた",
-      "remoteTitle": "第37話　北東の塔、見えた",
-      "localLen": 3241,
-      "remoteLen": 3207
-    },
-    {
-      "number": 38,
-      "kind": "draft",
-      "id": "7011860",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第38話　アサが仕事を覚えた",
-      "remoteTitle": "第38話　アサが仕事を覚えた",
-      "localLen": 3805,
-      "remoteLen": 3611
-    },
-    {
-      "number": 50,
-      "kind": "draft",
-      "id": "7011876",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第50話　地図の外の最初の夜",
-      "remoteTitle": "第50話　地図の外の最初の夜",
-      "localLen": 3563,
-      "remoteLen": 3562
+      "localTitle": "第39話　霧の正体を調べに行く",
+      "remoteTitle": "第39話　霧の正体を調べに行く",
+      "localLen": 4421,
+      "remoteLen": 4419
     },
     {
       "number": 55,
@@ -255,19 +134,8 @@
       "bodyDiff": true,
       "localTitle": "第55話　B番号の地図を作る",
       "remoteTitle": "第55話　B番号の地図を作る",
-      "localLen": 3452,
-      "remoteLen": 3448
-    },
-    {
-      "number": 62,
-      "kind": "draft",
-      "id": "7011890",
-      "titleDiff": false,
-      "bodyDiff": true,
-      "localTitle": "第62話　スズが失敗した",
-      "remoteTitle": "第62話　スズが失敗した",
-      "localLen": 4243,
-      "remoteLen": 4140
+      "localLen": 3483,
+      "remoteLen": 3452
     }
   ]
 }
