@@ -285,7 +285,6 @@
       }
 
       .selectors,
-      .settings,
       .controls {
         grid-column: 2;
       }
@@ -330,23 +329,7 @@
         <button id="pauseButton">一時停止</button>
         <button id="nextButton">次話</button>
         <button id="noteButton">メモ</button>
-        <button id="notesButton">一覧</button>
-      </div>
-
-      <div class="settings">
-        <div class="field voice-field">
-          <label for="voiceSelect">音声</label>
-          <select id="voiceSelect"></select>
-        </div>
-        <div class="field">
-          <label for="rateInput">速度 <span id="rateValue">1.00</span></label>
-          <input id="rateInput" type="range" min="0.65" max="2.50" step="0.05" value="1">
-        </div>
-        <div class="field">
-          <label for="pitchInput">高さ <span id="pitchValue">1.00</span></label>
-          <input id="pitchInput" type="range" min="0.75" max="1.25" step="0.05" value="1">
-        </div>
-        <div id="wakeStatus" class="wake-status">画面維持: 待機中</div>
+        <button id="settingsButton">設定</button>
       </div>
     </header>
 
@@ -371,6 +354,42 @@
           <button id="copyNotesButton">一覧をコピー</button>
           <button id="showNotesButton">一覧を表示</button>
           <button id="clearNotesButton">全削除</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="settingsDialog" class="dialog-backdrop" aria-hidden="true">
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="settingsDialogTitle">
+        <div class="dialog-header">
+          <h2 id="settingsDialogTitle" class="dialog-title">読み上げ設定</h2>
+          <button id="closeSettingsButton">閉じる</button>
+        </div>
+        <div class="dialog-body">
+          <div class="settings">
+            <div class="field voice-field">
+              <label for="voiceSelect">音声</label>
+              <select id="voiceSelect"></select>
+            </div>
+            <div class="field">
+              <label for="rateInput">速度 <span id="rateValue">1.00</span></label>
+              <input id="rateInput" type="range" min="0.65" max="2.50" step="0.05" value="1">
+            </div>
+            <div class="field">
+              <label for="pitchInput">高さ <span id="pitchValue">1.00</span></label>
+              <input id="pitchInput" type="range" min="0.75" max="1.25" step="0.05" value="1">
+            </div>
+            <div class="field">
+              <label for="wakeDurationSelect">画面維持時間</label>
+              <select id="wakeDurationSelect">
+                <option value="10">10分</option>
+                <option value="15">15分</option>
+                <option value="20">20分</option>
+                <option value="25">25分</option>
+                <option value="30">30分</option>
+              </select>
+            </div>
+            <div id="wakeStatus" class="wake-status">画面維持: 待機中</div>
+          </div>
         </div>
       </section>
     </div>
@@ -461,6 +480,7 @@
       loading: false,
       noteContext: null,
       wakeLock: null,
+      wakeLockTimer: null,
     };
 
     const els = {
@@ -474,12 +494,13 @@
       pauseButton: document.getElementById("pauseButton"),
       nextButton: document.getElementById("nextButton"),
       noteButton: document.getElementById("noteButton"),
-      notesButton: document.getElementById("notesButton"),
+      settingsButton: document.getElementById("settingsButton"),
       voiceSelect: document.getElementById("voiceSelect"),
       rateInput: document.getElementById("rateInput"),
       rateValue: document.getElementById("rateValue"),
       pitchInput: document.getElementById("pitchInput"),
       pitchValue: document.getElementById("pitchValue"),
+      wakeDurationSelect: document.getElementById("wakeDurationSelect"),
       wakeStatus: document.getElementById("wakeStatus"),
       reader: document.getElementById("reader"),
       noteDialog: document.getElementById("noteDialog"),
@@ -493,6 +514,8 @@
       copyNotesButton: document.getElementById("copyNotesButton"),
       showNotesButton: document.getElementById("showNotesButton"),
       clearNotesButton: document.getElementById("clearNotesButton"),
+      settingsDialog: document.getElementById("settingsDialog"),
+      closeSettingsButton: document.getElementById("closeSettingsButton"),
     };
 
     function escapeHtml(value) {
@@ -700,6 +723,16 @@
       state.noteContext = null;
     }
 
+    function openSettingsDialog() {
+      els.settingsDialog.classList.add("open");
+      els.settingsDialog.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSettingsDialog() {
+      els.settingsDialog.classList.remove("open");
+      els.settingsDialog.setAttribute("aria-hidden", "true");
+    }
+
     function saveCurrentNote() {
       if (!state.noteContext) return;
       const notes = loadNotes();
@@ -745,7 +778,23 @@
         els.wakeStatus.textContent = "画面維持: このブラウザでは非対応";
         return;
       }
-      els.wakeStatus.textContent = state.wakeLock ? "画面維持: 有効" : "画面維持: 待機中";
+      const minutes = Number(els.wakeDurationSelect.value || 10);
+      els.wakeStatus.textContent = state.wakeLock
+        ? `画面維持: 有効 (${minutes}分)`
+        : "画面維持: 待機中";
+    }
+
+    function scheduleWakeLockRelease() {
+      if (state.wakeLockTimer) {
+        clearTimeout(state.wakeLockTimer);
+        state.wakeLockTimer = null;
+      }
+      if (!state.wakeLock) return;
+      const minutes = Number(els.wakeDurationSelect.value || 10);
+      state.wakeLockTimer = setTimeout(() => {
+        releaseWakeLock();
+      }, minutes * 60 * 1000);
+      updateWakeLockStatus();
     }
 
     async function requestWakeLock() {
@@ -753,16 +802,24 @@
         updateWakeLockStatus();
         return;
       }
-      if (state.wakeLock || document.visibilityState !== "visible") return;
+      if (document.visibilityState !== "visible") return;
+      if (state.wakeLock) {
+        scheduleWakeLockRelease();
+        return;
+      }
 
       try {
         const lock = await navigator.wakeLock.request("screen");
         state.wakeLock = lock;
         lock.addEventListener("release", () => {
           if (state.wakeLock === lock) state.wakeLock = null;
+          if (state.wakeLockTimer) {
+            clearTimeout(state.wakeLockTimer);
+            state.wakeLockTimer = null;
+          }
           updateWakeLockStatus();
         });
-        updateWakeLockStatus();
+        scheduleWakeLockRelease();
       } catch (error) {
         state.wakeLock = null;
         updateWakeLockStatus(`画面維持: 取得できませんでした (${error.name || "Error"})`);
@@ -772,6 +829,10 @@
     async function releaseWakeLock() {
       const lock = state.wakeLock;
       state.wakeLock = null;
+      if (state.wakeLockTimer) {
+        clearTimeout(state.wakeLockTimer);
+        state.wakeLockTimer = null;
+      }
       if (lock) {
         try {
           await lock.release();
@@ -959,7 +1020,6 @@
       els.playButton.disabled = !canPlay || (state.speaking && !state.paused);
       els.pauseButton.disabled = !state.speaking || state.paused;
       els.noteButton.disabled = !canPlay;
-      els.notesButton.disabled = false;
     }
 
     els.partSelect.addEventListener("change", () => {
@@ -990,8 +1050,9 @@
     els.playButton.addEventListener("click", playSpeech);
     els.pauseButton.addEventListener("click", pauseSpeech);
     els.noteButton.addEventListener("click", () => openNoteDialog("current"));
-    els.notesButton.addEventListener("click", () => openNoteDialog("list"));
+    els.settingsButton.addEventListener("click", openSettingsDialog);
     els.closeNoteButton.addEventListener("click", closeNoteDialog);
+    els.closeSettingsButton.addEventListener("click", closeSettingsDialog);
     els.saveNoteButton.addEventListener("click", saveCurrentNote);
     els.copyNotesButton.addEventListener("click", () => {
       copySavedNotes().catch(() => {
@@ -1002,6 +1063,9 @@
     els.clearNotesButton.addEventListener("click", clearSavedNotes);
     els.noteDialog.addEventListener("click", (event) => {
       if (event.target === els.noteDialog) closeNoteDialog();
+    });
+    els.settingsDialog.addEventListener("click", (event) => {
+      if (event.target === els.settingsDialog) closeSettingsDialog();
     });
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") {
@@ -1030,11 +1094,20 @@
     els.voiceSelect.addEventListener("change", () => {
       localStorage.setItem("yahiroTtsVoice", els.voiceSelect.value);
     });
+    els.wakeDurationSelect.addEventListener("change", () => {
+      localStorage.setItem("yahiroTtsWakeDuration", els.wakeDurationSelect.value);
+      if (state.wakeLock) scheduleWakeLockRelease();
+      updateWakeLockStatus();
+    });
 
     const savedRate = localStorage.getItem("yahiroTtsRate");
     const savedPitch = localStorage.getItem("yahiroTtsPitch");
+    const savedWakeDuration = localStorage.getItem("yahiroTtsWakeDuration");
     if (savedRate) els.rateInput.value = savedRate;
     if (savedPitch) els.pitchInput.value = savedPitch;
+    if (savedWakeDuration && ["10", "15", "20", "25", "30"].includes(savedWakeDuration)) {
+      els.wakeDurationSelect.value = savedWakeDuration;
+    }
     els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
     els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
 
