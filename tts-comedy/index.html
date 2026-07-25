@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>辺境拠点日誌 コメディ強化版 読み上げ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --text: #17211f;
+      --muted: #66716e;
+      --line: #d8ded8;
+      --accent: #0f766e;
+      --accent-strong: #0b5e58;
+      --accent-soft: #dcefeb;
+      --current: #fff4c7;
+      --warn: #a15c00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Yu Gothic", "Yu Gothic UI", Meiryo, system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button,
+    select {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    button {
+      min-height: 42px;
+      padding: 0 12px;
+    }
+
+    button:disabled {
+      opacity: 0.42;
+    }
+
+    .primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 8px 20px rgba(23, 33, 31, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    h1 {
+      overflow: hidden;
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .meta {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .selectors {
+      display: grid;
+      grid-template-columns: 0.8fr 1fr 1.4fr;
+      gap: 7px;
+    }
+
+    select {
+      width: 100%;
+      min-height: 38px;
+      padding: 0 8px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+      align-items: center;
+    }
+
+    .field {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .wake-status {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .voice-field {
+      grid-column: 1 / -1;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .reader {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 18px 12px 64px;
+    }
+
+    .message {
+      margin: 18px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .episode-heading {
+      margin: 0 0 16px;
+      font-size: 22px;
+      line-height: 1.45;
+    }
+
+    .paragraph {
+      margin: 0 0 0.55em;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 17px;
+      line-height: 1.8;
+      text-indent: 1em;
+      white-space: pre-wrap;
+    }
+
+    .paragraph.no-indent {
+      text-indent: 0;
+    }
+
+    .paragraph.current {
+      background: var(--current);
+      box-shadow: inset 4px 0 0 var(--warn);
+    }
+
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      place-items: end center;
+      padding: 14px;
+      background: rgba(23, 33, 31, 0.38);
+    }
+
+    .dialog-backdrop.open {
+      display: grid;
+    }
+
+    .dialog {
+      width: min(720px, 100%);
+      max-height: min(78vh, 680px);
+      overflow: auto;
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: 0 18px 42px rgba(23, 33, 31, 0.24);
+    }
+
+    .dialog-header,
+    .dialog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-actions {
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .dialog-title {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.4;
+    }
+
+    .dialog-body {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .note-location,
+    .note-preview,
+    .note-status {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .note-preview {
+      padding: 10px;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      font: inherit;
+      line-height: 1.6;
+    }
+
+    .notes-output {
+      min-height: 220px;
+      white-space: pre;
+    }
+
+    @media (min-width: 760px) {
+      .top {
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 1.2fr);
+        align-items: start;
+        padding: 12px 18px;
+      }
+
+      .selectors,
+      .controls {
+        grid-column: 2;
+      }
+
+      .title {
+        grid-row: 1 / span 3;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .selectors {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .paragraph {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="title">
+        <h1 id="title">辺境拠点日誌 コメディ強化版 読み上げ</h1>
+        <div id="meta" class="meta">話数を選んで再生してください</div>
+      </div>
+
+      <div class="selectors">
+        <select id="partSelect" aria-label="部"></select>
+        <select id="chapterSelect" aria-label="章"></select>
+        <select id="episodeSelect" aria-label="話"></select>
+      </div>
+
+      <div class="controls">
+        <button id="prevButton">前話</button>
+        <button id="playButton" class="primary">再生</button>
+        <button id="pauseButton">一時停止</button>
+        <button id="nextButton">次話</button>
+        <button id="noteButton">メモ</button>
+        <button id="settingsButton">設定</button>
+      </div>
+    </header>
+
+    <main id="reader" class="reader">
+      <div class="message">コメディ強化版の第x部、第x章、第xx話を選んで再生すると、その話から順番に読み上げます。</div>
+    </main>
+
+    <div id="noteDialog" class="dialog-backdrop" aria-hidden="true">
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="noteDialogTitle">
+        <div class="dialog-header">
+          <h2 id="noteDialogTitle" class="dialog-title">メモを記録</h2>
+          <button id="closeNoteButton">閉じる</button>
+        </div>
+        <div class="dialog-body">
+          <div id="noteLocation" class="note-location"></div>
+          <div id="notePreview" class="note-preview"></div>
+          <textarea id="noteText" placeholder="気づいたことを書く"></textarea>
+          <div id="noteStatus" class="note-status"></div>
+        </div>
+        <div class="dialog-actions">
+          <button id="saveNoteButton" class="primary">記録</button>
+          <button id="copyNotesButton">一覧をコピー</button>
+          <button id="showNotesButton">一覧を表示</button>
+          <button id="clearNotesButton">全削除</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="settingsDialog" class="dialog-backdrop" aria-hidden="true">
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="settingsDialogTitle">
+        <div class="dialog-header">
+          <h2 id="settingsDialogTitle" class="dialog-title">読み上げ設定</h2>
+          <button id="closeSettingsButton">閉じる</button>
+        </div>
+        <div class="dialog-body">
+          <div class="settings">
+            <div class="field voice-field">
+              <label for="voiceSelect">音声</label>
+              <select id="voiceSelect"></select>
+            </div>
+            <div class="field">
+              <label for="rateInput">速度 <span id="rateValue">1.00</span></label>
+              <input id="rateInput" type="range" min="0.65" max="2.50" step="0.05" value="1">
+            </div>
+            <div class="field">
+              <label for="pitchInput">高さ <span id="pitchValue">1.00</span></label>
+              <input id="pitchInput" type="range" min="0.75" max="1.25" step="0.05" value="1">
+            </div>
+            <div class="field">
+              <label for="wakeDurationSelect">画面維持時間</label>
+              <select id="wakeDurationSelect">
+                <option value="10">10分</option>
+                <option value="15">15分</option>
+                <option value="20">20分</option>
+                <option value="25">25分</option>
+                <option value="30">30分</option>
+              </select>
+            </div>
+            <div id="wakeStatus" class="wake-status">画面維持: 待機中</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const EPISODES = [
+      {"no":1,"part":"第1部","chapter":"第1章_建設期","title":"第01話_三ツ辻、始まります（？）","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第01話_三ツ辻、始まります（？）.md"},
+      {"no":2,"part":"第1部","chapter":"第1章_建設期","title":"第02話_まず、柵を作ろう","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第02話_まず、柵を作ろう.md"},
+      {"no":3,"part":"第1部","chapter":"第1章_建設期","title":"第03話_寝る場所を作る","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第03話_寝る場所を作る.md"},
+      {"no":4,"part":"第1部","chapter":"第1章_建設期","title":"第04話_水を確保せよ","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第04話_水を確保せよ.md"},
+      {"no":5,"part":"第1部","chapter":"第1章_建設期","title":"第05話_食料はどこから来るのか","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第05話_食料はどこから来るのか.md"},
+      {"no":6,"part":"第1部","chapter":"第1章_建設期","title":"第06話_長老ヤエ、ご視察に来る","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第06話_長老ヤエ、ご視察に来る.md"},
+      {"no":7,"part":"第1部","chapter":"第1章_建設期","title":"第07話_初めての嵐","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第07話_初めての嵐.md"},
+      {"no":8,"part":"第1部","chapter":"第1章_建設期","title":"第08話_2ヶ月が経った","path":"../辺境拠点日誌_コメディ強化版/第1部/第1章_建設期/第08話_2ヶ月が経った.md"},
+      {"no":9,"part":"第1部","chapter":"第2章_定着期","title":"第09話_役割を決める","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第09話_役割を決める.md"},
+      {"no":10,"part":"第1部","chapter":"第2章_定着期","title":"第10話_建設仕事を引き継ぐ","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第10話_建設仕事を引き継ぐ.md"},
+      {"no":11,"part":"第1部","chapter":"第2章_定着期","title":"第11話_常駐の仕事を作る","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第11話_常駐の仕事を作る.md"},
+      {"no":12,"part":"第1部","chapter":"第2章_定着期","title":"第12話_3集落から物資が届く","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第12話_3集落から物資が届く.md"},
+      {"no":13,"part":"第1部","chapter":"第2章_定着期","title":"第13話_ガンとタケオのこと","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第13話_ガンとタケオのこと.md"},
+      {"no":14,"part":"第1部","chapter":"第2章_定着期","title":"第14話_野廻りの地図を作る","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第14話_野廻りの地図を作る.md"},
+      {"no":15,"part":"第1部","chapter":"第2章_定着期","title":"第15話_初めての集落からの依頼","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第15話_初めての集落からの依頼.md"},
+      {"no":16,"part":"第1部","chapter":"第2章_定着期","title":"第16話_井戸、完成する","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第16話_井戸、完成する.md"},
+      {"no":17,"part":"第1部","chapter":"第2章_定着期","title":"第17話_お風呂と、便所と、ノシ草のこと","path":"../辺境拠点日誌_コメディ強化版/第1部/第2章_定着期/第17話_お風呂と、便所と、ノシ草のこと.md"}
+    ];
+
+    const state = {
+      episodeIndex: 0,
+      paragraphIndex: 0,
+      paragraphs: [],
+      speaking: false,
+      paused: false,
+      stopped: true,
+      loading: false,
+      noteContext: null,
+      wakeLock: null,
+      wakeLockTimer: null,
+    };
+
+    const els = {
+      title: document.getElementById("title"),
+      meta: document.getElementById("meta"),
+      partSelect: document.getElementById("partSelect"),
+      chapterSelect: document.getElementById("chapterSelect"),
+      episodeSelect: document.getElementById("episodeSelect"),
+      prevButton: document.getElementById("prevButton"),
+      playButton: document.getElementById("playButton"),
+      pauseButton: document.getElementById("pauseButton"),
+      nextButton: document.getElementById("nextButton"),
+      noteButton: document.getElementById("noteButton"),
+      settingsButton: document.getElementById("settingsButton"),
+      voiceSelect: document.getElementById("voiceSelect"),
+      rateInput: document.getElementById("rateInput"),
+      rateValue: document.getElementById("rateValue"),
+      pitchInput: document.getElementById("pitchInput"),
+      pitchValue: document.getElementById("pitchValue"),
+      wakeDurationSelect: document.getElementById("wakeDurationSelect"),
+      wakeStatus: document.getElementById("wakeStatus"),
+      reader: document.getElementById("reader"),
+      noteDialog: document.getElementById("noteDialog"),
+      noteDialogTitle: document.getElementById("noteDialogTitle"),
+      closeNoteButton: document.getElementById("closeNoteButton"),
+      noteLocation: document.getElementById("noteLocation"),
+      notePreview: document.getElementById("notePreview"),
+      noteText: document.getElementById("noteText"),
+      noteStatus: document.getElementById("noteStatus"),
+      saveNoteButton: document.getElementById("saveNoteButton"),
+      copyNotesButton: document.getElementById("copyNotesButton"),
+      showNotesButton: document.getElementById("showNotesButton"),
+      clearNotesButton: document.getElementById("clearNotesButton"),
+      settingsDialog: document.getElementById("settingsDialog"),
+      closeSettingsButton: document.getElementById("closeSettingsButton"),
+    };
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function stripFrontMatter(markdown) {
+      return markdown.replace(/^\uFEFF?---\s*[\r\n][\s\S]*?[\r\n]---\s*[\r\n]/, "");
+    }
+
+    function markdownToParagraphs(markdown) {
+      const withoutFrontMatter = stripFrontMatter(markdown);
+      const withoutCodeBlocks = withoutFrontMatter.replace(/```[\s\S]*?```/g, "");
+      const lines = withoutCodeBlocks
+        .split(/\r?\n/)
+        .map((line) => {
+          let text = line.trimEnd();
+          if (/^\s*---+\s*$/.test(text)) return "";
+          text = text.replace(/^\s{0,3}#{1,6}\s*/, "");
+          text = text.replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1");
+          text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+          text = text.replace(/`([^`]+)`/g, "$1");
+          text = text.replace(/[*_~]{1,3}/g, "");
+          text = text.replace(/<[^>]+>/g, "");
+          return text;
+        });
+
+      return lines
+        .join("\n")
+        .split(/\n{2,}/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean);
+    }
+
+    function paragraphForSpeech(paragraph) {
+      return paragraph
+        .replace(/｜?([^《》\n]{1,40})《([^》]+)》/g, "$2")
+        .replace(/[「」『』]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function loadNotes() {
+      try {
+        const notes = JSON.parse(localStorage.getItem("yahiroComedyTtsNotes") || "[]");
+        return Array.isArray(notes) ? notes : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem("yahiroComedyTtsNotes", JSON.stringify(notes));
+    }
+
+    function currentNoteContext() {
+      const episode = EPISODES[state.episodeIndex];
+      const paragraph = state.paragraphs[state.paragraphIndex] || "";
+      return {
+        id: `${Date.now()}-${episode.no}-${state.paragraphIndex + 1}`,
+        createdAt: new Date().toISOString(),
+        episodeNo: episode.no,
+        part: episode.part,
+        chapter: episode.chapter,
+        title: episode.title,
+        path: episode.path.replace(/^\.\.\//, ""),
+        paragraphIndex: state.paragraphIndex + 1,
+        paragraphText: paragraph,
+      };
+    }
+
+    function noteLocationText(note) {
+      return `${note.part} / ${note.chapter} / ${note.title} / 段落${note.paragraphIndex}`;
+    }
+
+    function notesToMarkdown(notes) {
+      if (!notes.length) return "記録されたメモはありません。";
+      return notes.map((note) => [
+        `## ${note.title} 段落${note.paragraphIndex}`,
+        ``,
+        `- 記録日時: ${note.createdAt}`,
+        `- 場所: ${noteLocationText(note)}`,
+        `- ファイル: ${note.path}`,
+        ``,
+        `> ${note.paragraphText.replace(/\n/g, "\n> ")}`,
+        ``,
+        note.memo || "（メモなし）",
+      ].join("\n")).join("\n\n---\n\n");
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    function unique(values) {
+      return Array.from(new Set(values));
+    }
+
+    function option(label, value) {
+      return `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`;
+    }
+
+    function populateSelectors() {
+      const parts = unique(EPISODES.map((episode) => episode.part));
+      els.partSelect.innerHTML = parts.map((part) => option(part, part)).join("");
+      updateChapterOptions();
+      updateEpisodeOptions();
+    }
+
+    function updateChapterOptions() {
+      const part = els.partSelect.value || EPISODES[0].part;
+      const chapters = unique(EPISODES.filter((episode) => episode.part === part).map((episode) => episode.chapter));
+      const current = els.chapterSelect.value;
+      els.chapterSelect.innerHTML = chapters.map((chapter) => option(chapter, chapter)).join("");
+      if (chapters.includes(current)) els.chapterSelect.value = current;
+    }
+
+    function updateEpisodeOptions() {
+      const part = els.partSelect.value;
+      const chapter = els.chapterSelect.value;
+      const episodes = EPISODES.filter((episode) => episode.part === part && episode.chapter === chapter);
+      const currentNo = Number(els.episodeSelect.value);
+      els.episodeSelect.innerHTML = episodes.map((episode) => option(episode.title, String(episode.no))).join("");
+      if (episodes.some((episode) => episode.no === currentNo)) els.episodeSelect.value = String(currentNo);
+    }
+
+    function syncSelectors() {
+      const episode = EPISODES[state.episodeIndex];
+      els.partSelect.value = episode.part;
+      updateChapterOptions();
+      els.chapterSelect.value = episode.chapter;
+      updateEpisodeOptions();
+      els.episodeSelect.value = String(episode.no);
+    }
+
+    function populateVoices() {
+      const voices = speechSynthesis.getVoices();
+      const jaVoices = voices.filter((voice) => /^ja(-|_)?/i.test(voice.lang));
+      const visibleVoices = jaVoices.length ? jaVoices : voices;
+      const saved = localStorage.getItem("yahiroComedyTtsVoice") || "";
+      els.voiceSelect.innerHTML = visibleVoices.map((voice) =>
+        option(`${voice.name} (${voice.lang})`, voice.name)
+      ).join("");
+      const preferred = visibleVoices.find((voice) => voice.name === saved)
+        || visibleVoices.find((voice) => /^ja(-|_)?/i.test(voice.lang))
+        || visibleVoices[0];
+      if (preferred) els.voiceSelect.value = preferred.name;
+    }
+
+    function openNoteDialog(mode = "current") {
+      if (mode === "current" && (!state.paragraphs.length || state.loading)) return;
+      if (state.speaking) pauseSpeech();
+
+      const notes = loadNotes();
+      els.noteDialog.classList.add("open");
+      els.noteDialog.setAttribute("aria-hidden", "false");
+      els.noteStatus.textContent = `保存済みメモ: ${notes.length}件`;
+
+      if (mode === "list") {
+        state.noteContext = null;
+        els.noteDialogTitle.textContent = "メモ一覧";
+        els.noteLocation.textContent = "保存済みメモをMarkdown形式で表示しています。";
+        els.notePreview.textContent = "";
+        els.noteText.value = notesToMarkdown(notes);
+        els.noteText.classList.add("notes-output");
+        els.saveNoteButton.disabled = true;
+        els.copyNotesButton.disabled = !notes.length;
+        els.clearNotesButton.disabled = !notes.length;
+        setTimeout(() => els.noteText.focus(), 0);
+        return;
+      }
+
+      const context = currentNoteContext();
+      state.noteContext = context;
+      els.noteDialogTitle.textContent = "メモを記録";
+      els.noteLocation.textContent = noteLocationText(context);
+      els.notePreview.textContent = context.paragraphText;
+      els.noteText.value = "";
+      els.noteText.classList.remove("notes-output");
+      els.saveNoteButton.disabled = false;
+      els.copyNotesButton.disabled = !notes.length;
+      els.clearNotesButton.disabled = !notes.length;
+      setTimeout(() => els.noteText.focus(), 0);
+    }
+
+    function closeNoteDialog() {
+      els.noteDialog.classList.remove("open");
+      els.noteDialog.setAttribute("aria-hidden", "true");
+      els.noteText.value = "";
+      state.noteContext = null;
+    }
+
+    function openSettingsDialog() {
+      els.settingsDialog.classList.add("open");
+      els.settingsDialog.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSettingsDialog() {
+      els.settingsDialog.classList.remove("open");
+      els.settingsDialog.setAttribute("aria-hidden", "true");
+    }
+
+    function saveCurrentNote() {
+      if (!state.noteContext) return;
+      const notes = loadNotes();
+      notes.push({
+        ...state.noteContext,
+        memo: els.noteText.value.trim(),
+      });
+      saveNotes(notes);
+      els.noteStatus.textContent = `記録しました。保存済みメモ: ${notes.length}件`;
+      els.noteText.value = "";
+      els.copyNotesButton.disabled = false;
+      els.clearNotesButton.disabled = false;
+    }
+
+    async function copySavedNotes() {
+      const notes = loadNotes();
+      await copyText(notesToMarkdown(notes));
+      els.noteStatus.textContent = `メモ一覧をコピーしました。保存済みメモ: ${notes.length}件`;
+    }
+
+    function clearSavedNotes() {
+      const notes = loadNotes();
+      if (!notes.length) return;
+      if (!confirm("保存済みメモをすべて削除しますか？")) return;
+      saveNotes([]);
+      els.noteStatus.textContent = "保存済みメモを削除しました。";
+      els.noteText.value = "";
+      els.copyNotesButton.disabled = true;
+      els.clearNotesButton.disabled = true;
+    }
+
+    function selectedVoice() {
+      const voices = speechSynthesis.getVoices();
+      return voices.find((voice) => voice.name === els.voiceSelect.value) || null;
+    }
+
+    function updateWakeLockStatus(message) {
+      if (message) {
+        els.wakeStatus.textContent = message;
+        return;
+      }
+      if (!("wakeLock" in navigator)) {
+        els.wakeStatus.textContent = "画面維持: このブラウザでは非対応";
+        return;
+      }
+      const minutes = Number(els.wakeDurationSelect.value || 10);
+      els.wakeStatus.textContent = state.wakeLock
+        ? `画面維持: 有効 (${minutes}分)`
+        : "画面維持: 待機中";
+    }
+
+    function scheduleWakeLockRelease() {
+      if (state.wakeLockTimer) {
+        clearTimeout(state.wakeLockTimer);
+        state.wakeLockTimer = null;
+      }
+      if (!state.wakeLock) return;
+      const minutes = Number(els.wakeDurationSelect.value || 10);
+      state.wakeLockTimer = setTimeout(() => {
+        releaseWakeLock();
+      }, minutes * 60 * 1000);
+      updateWakeLockStatus();
+    }
+
+    async function requestWakeLock() {
+      if (!("wakeLock" in navigator)) {
+        updateWakeLockStatus();
+        return;
+      }
+      if (document.visibilityState !== "visible") return;
+      if (state.wakeLock) {
+        scheduleWakeLockRelease();
+        return;
+      }
+
+      try {
+        const lock = await navigator.wakeLock.request("screen");
+        state.wakeLock = lock;
+        lock.addEventListener("release", () => {
+          if (state.wakeLock === lock) state.wakeLock = null;
+          if (state.wakeLockTimer) {
+            clearTimeout(state.wakeLockTimer);
+            state.wakeLockTimer = null;
+          }
+          updateWakeLockStatus();
+        });
+        scheduleWakeLockRelease();
+      } catch (error) {
+        state.wakeLock = null;
+        updateWakeLockStatus(`画面維持: 取得できませんでした (${error.name || "Error"})`);
+      }
+    }
+
+    async function releaseWakeLock() {
+      const lock = state.wakeLock;
+      state.wakeLock = null;
+      if (state.wakeLockTimer) {
+        clearTimeout(state.wakeLockTimer);
+        state.wakeLockTimer = null;
+      }
+      if (lock) {
+        try {
+          await lock.release();
+        } catch {
+          // The browser may have already released it.
+        }
+      }
+      updateWakeLockStatus();
+    }
+
+    async function loadEpisode(index, keepWakeLock = false) {
+      stopSpeech(!keepWakeLock);
+      state.loading = true;
+      state.episodeIndex = Math.max(0, Math.min(index, EPISODES.length - 1));
+      state.paragraphIndex = 0;
+      syncSelectors();
+      renderLoading();
+      updateButtons();
+
+      const episode = EPISODES[state.episodeIndex];
+      try {
+        const response = await fetch(encodeURI(episode.path), { cache: "no-cache" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const markdown = await response.text();
+        state.paragraphs = markdownToParagraphs(markdown);
+        state.loading = false;
+        localStorage.setItem("yahiroComedyTtsEpisodeNo", String(episode.no));
+        renderEpisode();
+      } catch (error) {
+        state.loading = false;
+        state.paragraphs = [];
+        renderError(episode, error);
+      }
+      updateButtons();
+    }
+
+    function renderLoading() {
+      const episode = EPISODES[state.episodeIndex];
+      els.title.textContent = episode.title;
+      els.meta.textContent = `${episode.part} / ${episode.chapter}`;
+      els.reader.innerHTML = `<div class="message">${escapeHtml(episode.title)} を読み込み中です。</div>`;
+    }
+
+    function renderError(episode, error) {
+      els.title.textContent = episode.title;
+      els.meta.textContent = "読み込みに失敗しました";
+      els.reader.innerHTML = `
+        <div class="message">
+          Markdownを読み込めませんでした。GitHub Pagesの公開元がリポジトリルートになっているか確認してください。<br>
+          ${escapeHtml(episode.path)}<br>
+          ${escapeHtml(String(error.message || error))}
+        </div>
+      `;
+    }
+
+    function renderEpisode() {
+      const episode = EPISODES[state.episodeIndex];
+      els.title.textContent = episode.title;
+      els.meta.textContent = `${state.paragraphIndex + 1} / ${state.paragraphs.length}  ${episode.part} / ${episode.chapter}`;
+      els.reader.innerHTML = `
+        <h2 class="episode-heading">${escapeHtml(episode.title)}</h2>
+        ${state.paragraphs.map((paragraph, index) => {
+          const classes = [
+            "paragraph",
+            /^[「『（(]/.test(paragraph) ? "no-indent" : "",
+            index === state.paragraphIndex ? "current" : "",
+          ].filter(Boolean).join(" ");
+          return `<p class="${classes}" data-index="${index}">${escapeHtml(paragraph)}</p>`;
+        }).join("")}
+      `;
+      scrollCurrentParagraph();
+    }
+
+    function highlightCurrentParagraph() {
+      document.querySelectorAll(".paragraph").forEach((paragraph) => {
+        paragraph.classList.toggle("current", Number(paragraph.dataset.index) === state.paragraphIndex);
+      });
+      const episode = EPISODES[state.episodeIndex];
+      els.meta.textContent = `${state.paragraphIndex + 1} / ${state.paragraphs.length}  ${episode.part} / ${episode.chapter}`;
+      scrollCurrentParagraph();
+      updateButtons();
+    }
+
+    function scrollCurrentParagraph() {
+      const current = document.querySelector(".paragraph.current");
+      if (current) current.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    function speakCurrentParagraph() {
+      if (!state.paragraphs.length) return;
+      speechSynthesis.cancel();
+      state.stopped = false;
+
+      const text = paragraphForSpeech(state.paragraphs[state.paragraphIndex]);
+      if (!text) {
+        moveParagraph(1, true);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = selectedVoice();
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "ja-JP";
+      utterance.rate = Number(els.rateInput.value);
+      utterance.pitch = Number(els.pitchInput.value);
+
+      state.speaking = true;
+      state.paused = false;
+      highlightCurrentParagraph();
+
+      utterance.onend = () => {
+        if (state.stopped) return;
+        state.speaking = false;
+        state.paused = false;
+        moveParagraph(1, true);
+      };
+      utterance.onerror = () => {
+        if (state.stopped) return;
+        state.speaking = false;
+        state.paused = false;
+        updateButtons();
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    async function playSpeech() {
+      if (state.loading || !state.paragraphs.length) return;
+      await requestWakeLock();
+      if (state.paused) {
+        speechSynthesis.resume();
+        state.paused = false;
+        state.speaking = true;
+        updateButtons();
+        return;
+      }
+      speakCurrentParagraph();
+    }
+
+    function pauseSpeech() {
+      if (!state.speaking) return;
+      speechSynthesis.pause();
+      state.paused = true;
+      updateButtons();
+    }
+
+    function stopSpeech(releaseLock = true) {
+      state.stopped = true;
+      state.speaking = false;
+      state.paused = false;
+      speechSynthesis.cancel();
+      if (releaseLock) releaseWakeLock();
+    }
+
+    function moveParagraph(delta, autoPlay) {
+      const next = state.paragraphIndex + delta;
+      if (next >= 0 && next < state.paragraphs.length) {
+        state.paragraphIndex = next;
+        highlightCurrentParagraph();
+        if (autoPlay) speakCurrentParagraph();
+        return;
+      }
+
+      if (delta > 0 && state.episodeIndex < EPISODES.length - 1) {
+        loadEpisode(state.episodeIndex + 1, true).then(() => {
+          if (autoPlay) speakCurrentParagraph();
+        });
+        return;
+      }
+
+      stopSpeech();
+      updateButtons();
+    }
+
+    function changeEpisode(delta) {
+      const next = state.episodeIndex + delta;
+      if (next < 0 || next >= EPISODES.length) return;
+      loadEpisode(next);
+    }
+
+    function updateButtons() {
+      const canPlay = !state.loading && state.paragraphs.length > 0;
+      els.prevButton.disabled = state.loading || state.episodeIndex <= 0;
+      els.nextButton.disabled = state.loading || state.episodeIndex >= EPISODES.length - 1;
+      els.playButton.disabled = !canPlay || (state.speaking && !state.paused);
+      els.pauseButton.disabled = !state.speaking || state.paused;
+      els.noteButton.disabled = !canPlay;
+    }
+
+    els.partSelect.addEventListener("change", () => {
+      updateChapterOptions();
+      updateEpisodeOptions();
+      const first = EPISODES.find((episode) =>
+        episode.part === els.partSelect.value && episode.chapter === els.chapterSelect.value
+      );
+      if (first) loadEpisode(EPISODES.indexOf(first));
+    });
+
+    els.chapterSelect.addEventListener("change", () => {
+      updateEpisodeOptions();
+      const first = EPISODES.find((episode) =>
+        episode.part === els.partSelect.value && episode.chapter === els.chapterSelect.value
+      );
+      if (first) loadEpisode(EPISODES.indexOf(first));
+    });
+
+    els.episodeSelect.addEventListener("change", () => {
+      const no = Number(els.episodeSelect.value);
+      const index = EPISODES.findIndex((episode) => episode.no === no);
+      if (index >= 0) loadEpisode(index);
+    });
+
+    els.prevButton.addEventListener("click", () => changeEpisode(-1));
+    els.nextButton.addEventListener("click", () => changeEpisode(1));
+    els.playButton.addEventListener("click", playSpeech);
+    els.pauseButton.addEventListener("click", pauseSpeech);
+    els.noteButton.addEventListener("click", () => openNoteDialog("current"));
+    els.settingsButton.addEventListener("click", openSettingsDialog);
+    els.closeNoteButton.addEventListener("click", closeNoteDialog);
+    els.closeSettingsButton.addEventListener("click", closeSettingsDialog);
+    els.saveNoteButton.addEventListener("click", saveCurrentNote);
+    els.copyNotesButton.addEventListener("click", () => {
+      copySavedNotes().catch(() => {
+        els.noteStatus.textContent = "コピーできませんでした。本文を選択して手動でコピーしてください。";
+      });
+    });
+    els.showNotesButton.addEventListener("click", () => openNoteDialog("list"));
+    els.clearNotesButton.addEventListener("click", clearSavedNotes);
+    els.noteDialog.addEventListener("click", (event) => {
+      if (event.target === els.noteDialog) closeNoteDialog();
+    });
+    els.settingsDialog.addEventListener("click", (event) => {
+      if (event.target === els.settingsDialog) closeSettingsDialog();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        if (state.speaking && !state.paused && !state.stopped) requestWakeLock();
+      } else {
+        releaseWakeLock();
+      }
+    });
+
+    els.reader.addEventListener("click", (event) => {
+      const paragraph = event.target.closest(".paragraph");
+      if (!paragraph) return;
+      stopSpeech();
+      state.paragraphIndex = Number(paragraph.dataset.index);
+      highlightCurrentParagraph();
+    });
+
+    els.rateInput.addEventListener("input", () => {
+      els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+      localStorage.setItem("yahiroComedyTtsRate", els.rateInput.value);
+    });
+    els.pitchInput.addEventListener("input", () => {
+      els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+      localStorage.setItem("yahiroComedyTtsPitch", els.pitchInput.value);
+    });
+    els.voiceSelect.addEventListener("change", () => {
+      localStorage.setItem("yahiroComedyTtsVoice", els.voiceSelect.value);
+    });
+    els.wakeDurationSelect.addEventListener("change", () => {
+      localStorage.setItem("yahiroComedyTtsWakeDuration", els.wakeDurationSelect.value);
+      if (state.wakeLock) scheduleWakeLockRelease();
+      updateWakeLockStatus();
+    });
+
+    const savedRate = localStorage.getItem("yahiroComedyTtsRate");
+    const savedPitch = localStorage.getItem("yahiroComedyTtsPitch");
+    const savedWakeDuration = localStorage.getItem("yahiroComedyTtsWakeDuration");
+    if (savedRate) els.rateInput.value = savedRate;
+    if (savedPitch) els.pitchInput.value = savedPitch;
+    if (savedWakeDuration && ["10", "15", "20", "25", "30"].includes(savedWakeDuration)) {
+      els.wakeDurationSelect.value = savedWakeDuration;
+    }
+    els.rateValue.textContent = Number(els.rateInput.value).toFixed(2);
+    els.pitchValue.textContent = Number(els.pitchInput.value).toFixed(2);
+
+    populateSelectors();
+    populateVoices();
+    updateWakeLockStatus();
+    speechSynthesis.addEventListener("voiceschanged", populateVoices);
+
+    const savedNo = Number(localStorage.getItem("yahiroComedyTtsEpisodeNo") || "1");
+    const initialIndex = Math.max(0, EPISODES.findIndex((episode) => episode.no === savedNo));
+    loadEpisode(initialIndex);
+  </script>
+</body>
+</html>
+
+
+
