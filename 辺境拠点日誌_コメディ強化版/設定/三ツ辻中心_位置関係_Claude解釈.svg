@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="780" viewBox="0 0 1500 780" font-family="Meiryo, 'Yu Gothic', sans-serif" font-size="13">
+<rect width="1500" height="780" fill="#faf8f2"/>
+<text x="24" y="34" font-size="22" font-weight="bold">三ツ辻を中心にした位置関係（Claude の解釈・実距離比例）</text>
+<text x="24" y="56" fill="#666">左：広域 1px=4km（±75km）　右：拠点近傍 1px=25m（±12km）　北が上。方位・距離は 拠点と周辺地理.md と本編の確定値</text>
+
+<!-- ===== 広域図 ===== -->
+<g transform="translate(60,80)">
+<rect width="640" height="640" fill="#fff" stroke="#ccc"/>
+<text x="10" y="20" font-weight="bold" font-size="16">01 広域図</text>
+<g transform="translate(320,320) scale(4)">
+<!-- 等距離円 -->
+<circle r="20" fill="none" stroke="#eee" stroke-width="0.3"/><circle r="40" fill="none" stroke="#eee" stroke-width="0.3"/><circle r="60" fill="none" stroke="#eee" stroke-width="0.3"/>
+<!-- 六角形セル（辺37km、三ツ辻はセル中心の南南西7.7km） -->
+<polygon points="-6.4,-36.4 31.1,-31.1 43.5,11.6 28.3,28.3 -11.3,31.0 -30.5,5.4" fill="none" stroke="#8aa" stroke-width="0.5" stroke-dasharray="2,1.5"/>
+<!-- ナル川（北から南へ、三ツ辻の西1kmを通り、南では南東へ曲がる＝ミナシロ道の川沿いルート） -->
+<path d="M -4,-75 C -2,-40 -1,-10 -1.2,0 C -1.5,10 4,25 12,30 C 25,38 35,42 45,46" fill="none" stroke="#5b8fb8" stroke-width="1.2"/>
+<text x="-20" y="-55" fill="#5b8fb8" font-size="4">ナル川</text>
+<!-- 道 -->
+<line x1="0" y1="0" x2="-38.9" y2="-38.9" stroke="#c89a4a" stroke-width="0.8"/>
+<line x1="0" y1="0" x2="42.4" y2="42.4" stroke="#c89a4a" stroke-width="0.8"/>
+<line x1="0" y1="0" x2="-49.5" y2="49.5" stroke="#c89a4a" stroke-width="0.8"/>
+<line x1="-22" y1="-22" x2="-26" y2="-46" stroke="#c89a4a" stroke-width="0.6" stroke-dasharray="1.5,1"/>
+<line x1="-38.9" y1="-38.9" x2="-64" y2="-62" stroke="#c89a4a" stroke-width="0.6" stroke-dasharray="1.5,1"/>
+<!-- 暗い森・針鼠狼の縄張り（南西の森の縁からハラダ道沿いに長く伸びる） -->
+<path d="M -3,3 L -14,9 L -34,30 L -30,36 L -8,16 L -2,8 Z" fill="#dfe8d8" stroke="#9ab08e" stroke-width="0.4"/>
+<text x="-27" y="26" fill="#6a8a5a" font-size="3.5">針鼠狼の縄張り（ハラダ道沿い）</text>
+<!-- 標塔 -->
+<g fill="#6f9a6f">
+<circle cx="-6.4" cy="-36.4" r="1.6"/><circle cx="31.1" cy="-31.1" r="1.6"/><circle cx="43.5" cy="11.6" r="1.6"/><circle cx="28.3" cy="28.3" r="1.6"/><circle cx="-11.3" cy="31.0" r="1.6"/><circle cx="-30.5" cy="5.4" r="1.6"/>
+<circle cx="-67" cy="12" r="1.6" fill="#b08"/>
+</g>
+<g font-size="4" fill="#355">
+<text x="-18" y="-40">北の標塔 37km</text><text x="24" y="-35">北東の標塔 44km</text><text x="36" y="18">東の標塔 45km</text><text x="30" y="34">南東の標塔 40km</text><text x="-12" y="37">南南西の標塔 33km（B-4近傍）</text><text x="-50" y="2">西南西の標塔 31km</text>
+<text x="-74" y="19" fill="#b08">倒れた標塔・点検口</text><text x="-74" y="23" fill="#b08">（クストスの部屋）西南西へさらに37km</text>
+</g>
+<!-- 集落 -->
+<g fill="#4a7fb5"><circle cx="42.4" cy="42.4" r="2.2"/><circle cx="-38.9" cy="-38.9" r="2.2"/><circle cx="-49.5" cy="49.5" r="2.2"/><circle cx="-64" cy="-62" r="2.2" fill="#888"/></g>
+<g font-size="4.5" font-weight="bold">
+<text x="40" y="51">ミナシロ 南東60km</text><text x="-48" y="-42">カネヅカ 北西55km</text><text x="-58" y="58">ハラダ 南西70km</text><text x="-74" y="-65" fill="#666">外部市（北西・徒歩5日）</text>
+</g>
+<!-- 廃坑 -->
+<circle cx="-26" cy="-46" r="1.6" fill="#a66"/><text x="-24" y="-48" font-size="4" fill="#a66">廃坑（B-5近傍）徒歩3日・馬1.5日</text>
+<!-- 出作り地・禁域 -->
+<circle cx="7" cy="7" r="1.6" fill="#c76"/><text x="9" y="9" font-size="4" fill="#c76">ミナシロの出作り地（B-6・霧の窪地）10km</text>
+<circle cx="-3.4" cy="9.4" r="1.4" fill="#c33"/><text x="-1" y="13" font-size="4" fill="#c33">禁域（南南西 徒歩3時間）</text>
+<!-- 三ツ辻 -->
+<circle r="2.2" fill="#c33"/><text x="3" y="-2" font-size="5" font-weight="bold" fill="#c33">三ツ辻</text>
+</g>
+<text x="10" y="630" font-size="11" fill="#666">薄い円は三ツ辻から 20・40・60km。破線の六角形は標塔セル（辺37km）。</text>
+</g>
+<!-- ===== 拠点近傍 ===== -->
+<g transform="translate(760,80)">
+<rect width="640" height="640" fill="#fff" stroke="#ccc"/>
+<text x="10" y="20" font-weight="bold" font-size="16">02 拠点近傍（徒歩時間：15〜20km/日 ≒ 1時間4km）</text>
+<g transform="translate(320,320) scale(25)">
+<circle r="4" fill="none" stroke="#eee" stroke-width="0.06"/><circle r="8" fill="none" stroke="#eee" stroke-width="0.06"/>
+<!-- ナル川と橋 -->
+<path d="M -1.6,-12 C -1.3,-6 -1.1,-2 -1.2,0 C -1.3,2 -0.6,5 1.5,7.5 C 3,9 5,10.5 7,11.5" fill="none" stroke="#5b8fb8" stroke-width="0.25"/>
+<line x1="-1.5" y1="0" x2="-0.9" y2="0" stroke="#333" stroke-width="0.18"/><text x="-4.6" y="-0.4" font-size="0.6" fill="#5b8fb8">ナル川・橋（西15分）</text>
+<!-- 道：三叉路（東5分）で三方向に分岐 -->
+<line x1="0" y1="0" x2="0.4" y2="0" stroke="#c89a4a" stroke-width="0.14"/>
+<line x1="0.4" y1="0" x2="-7" y2="-7.4" stroke="#c89a4a" stroke-width="0.14"/>
+<line x1="0.4" y1="0" x2="8.5" y2="8.1" stroke="#c89a4a" stroke-width="0.14"/>
+<line x1="0.4" y1="0" x2="-8.5" y2="8.9" stroke="#c89a4a" stroke-width="0.14"/>
+<circle cx="0.4" cy="0" r="0.14" fill="#c89a4a"/><text x="0.6" y="-0.3" font-size="0.6">三叉路（東5分）</text>
+<text x="-7.2" y="-7.6" font-size="0.6" fill="#8a6a2a">カネヅカ道（北西）</text><text x="6.2" y="8.9" font-size="0.6" fill="#8a6a2a">ミナシロ道（南東・川沿い）</text><text x="-9.4" y="9.8" font-size="0.6" fill="#8a6a2a">ハラダ道（南西・森の縁）</text>
+<!-- 暗い森（南西1時間≒4km） -->
+<path d="M -2.6,2.4 L -5,3.4 L -9.5,8.5 L -7,10.5 L -3,6 L -1.2,4.2 Z" fill="#dfe8d8" stroke="#9ab08e" stroke-width="0.08"/>
+<text x="-6.4" y="5.2" font-size="0.6" fill="#6a8a5a">暗い森・針鼠狼の縄張り（南西1時間）</text>
+<!-- 禁域 -->
+<circle cx="-3.4" cy="9.4" r="0.22" fill="#c33"/><text x="-3.1" y="10.2" font-size="0.65" fill="#c33">禁域入口（南南西3時間）</text>
+<!-- 石柱・大岩 -->
+<circle cx="0" cy="2" r="0.18" fill="#6f9a6f"/><text x="0.3" y="2.3" font-size="0.6">B-7石柱（南30分）</text>
+<circle cx="0.9" cy="-0.9" r="0.18" fill="#777"/><text x="1.1" y="-1.1" font-size="0.6">大岩（北東20分）</text>
+<!-- 捕縛蔦 -->
+<ellipse cx="4.5" cy="2.5" rx="1.6" ry="0.9" fill="#e8dfe8" stroke="#a89ab0" stroke-width="0.06"/><text x="3.1" y="4" font-size="0.6" fill="#7a6a80">捕縛蔦の群生（東〜南東1時間半）</text>
+<!-- 出作り地・B-6 -->
+<circle cx="7" cy="7" r="0.25" fill="#c76"/><text x="5.3" y="6.5" font-size="0.65" fill="#c76">ミナシロの出作り地・B-6（2〜3時間）</text>
+<!-- B-12/B-15 -->
+<circle cx="-5.5" cy="-1" r="0.18" fill="#6f9a6f" stroke="#333" stroke-width="0.04" stroke-dasharray="0.1"/><text x="-9.2" y="-1.4" font-size="0.6" fill="#555">B-12／B-15（方角は本文未指定・1〜2時間圏）</text>
+<circle cx="2" cy="-5.5" r="0.18" fill="#6f9a6f" stroke="#333" stroke-width="0.04"/>
+<!-- 観測小屋 -->
+<rect x="-0.9" y="-1.6" width="0.4" height="0.4" fill="#b84"/><text x="-4.3" y="-1.9" font-size="0.55" fill="#b84">観測小屋（拠点外の丘）</text>
+<!-- 三ツ辻 -->
+<circle r="0.3" fill="#c33"/><text x="-1.2" y="1.2" font-size="0.8" font-weight="bold" fill="#c33">三ツ辻</text>
+</g>
+<text x="10" y="630" font-size="11" fill="#666">薄い円は三ツ辻から 4km（1時間）・8km（2時間）。</text>
+</g>
+</svg>
