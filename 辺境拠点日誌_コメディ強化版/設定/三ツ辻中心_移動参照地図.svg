@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1500" viewBox="0 0 1800 1500">
+<title>三ツ辻を中心とした周辺地図・コメディ強化版</title>
+<desc>広域図と近傍拡大図。縮尺なし。移動時間は全て拠点から片道。</desc>
+<rect width="1800" height="1500" fill="#faf8f2"/>
+<text x="45" y="32" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="42" font-weight="700" fill="#243b45">三ツ辻を中心とした周辺地図</text>
+<text x="47" y="94" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">コメディ強化版・執筆参照用  ｜  移動時間はすべて拠点から片道  ｜  2026-10-23</text>
+<rect x="40" y="150" width="1040" height="880" rx="16" fill="#ffffff" stroke="#dedfd6" stroke-width="2"/>
+<rect x="1110" y="150" width="650" height="880" rx="16" fill="#ffffff" stroke="#dedfd6" stroke-width="2"/>
+<text x="68" y="172" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="29" font-weight="700" fill="#243b45">01  広域図</text>
+<text x="68" y="218" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">三集落と六本の標塔／参考画像の相対配置を踏襲</text>
+<text x="1140" y="172" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="29" font-weight="700" fill="#243b45">02  拠点近傍・拡大図</text>
+<text x="1140" y="218" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">近場の目的地と遠方の標塔を区別する</text>
+<polyline points="490,350 760,350 875,555 760,760 490,760 375,555 490,350" fill="none" stroke="#769676" stroke-width="2" stroke-linejoin="round" stroke-dasharray="8 8"/>
+<polyline points="560,565 410,400 290,285" fill="none" stroke="#b58a48" stroke-width="5" stroke-linejoin="round"/>
+<polyline points="560,565 740,730 930,900" fill="none" stroke="#b58a48" stroke-width="5" stroke-linejoin="round"/>
+<polyline points="560,565 360,735 185,895" fill="none" stroke="#b58a48" stroke-width="5" stroke-linejoin="round"/>
+<polyline points="330,640 350,690 320,740 305,790 270,845" fill="none" stroke="#538caa" stroke-width="6" stroke-linejoin="round"/>
+<text x="84" y="730" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#538caa">ナル川</text>
+<polygon points="350,720 385,690 445,730 430,835 320,875 290,825" fill="#edf1e7"/>
+<text x="335" y="882" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#769676">森の縁ルート</text>
+<text x="155" y="410" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">丘陵越え</text>
+<text x="845" y="810" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">川沿い</text>
+<circle cx="490" cy="350" r="8" fill="#769676"/>
+<circle cx="760" cy="350" r="8" fill="#769676"/>
+<circle cx="875" cy="555" r="8" fill="#769676"/>
+<circle cx="760" cy="760" r="8" fill="#769676"/>
+<circle cx="490" cy="760" r="8" fill="#769676"/>
+<circle cx="375" cy="555" r="8" fill="#769676"/>
+<text x="415" y="275" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">A  北の標塔</text>
+<text x="415" y="309" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約37km／徒歩2日</text>
+<text x="726" y="275" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">C  北東の標塔</text>
+<text x="726" y="309" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約44km／徒歩2日</text>
+<text x="895" y="510" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">D  東の標塔</text>
+<text x="895" y="544" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約45km／徒歩2日</text>
+<text x="745" y="675" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">B  南東の標塔</text>
+<text x="745" y="709" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約40km／徒歩2日</text>
+<text x="435" y="795" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">E  南南西の標塔</text>
+<text x="435" y="829" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約33km／徒歩2日</text>
+<text x="90" y="520" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">F  西南西の標塔</text>
+<text x="90" y="554" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">約31km／徒歩2日</text>
+<circle cx="560" cy="565" r="13" fill="#b54f46"/>
+<rect x="440" y="588" width="250" height="90" rx="16" fill="#fff3ed" stroke="#e7c7b8" stroke-width="2"/>
+<text x="480" y="600" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="30" font-weight="700" fill="#b54f46">三ツ辻拠点</text>
+<text x="478" y="644" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="20" font-weight="400" fill="#63767c">すべての移動の起点</text>
+<circle cx="290" cy="285" r="11" fill="#538caa"/>
+<text x="70" y="275" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="28" font-weight="700" fill="#243b45">カネヅカ</text>
+<text x="70" y="315" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#63767c">北西・約55km</text>
+<text x="70" y="348" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">徒歩3.5〜4日</text>
+<circle cx="930" cy="900" r="11" fill="#538caa"/>
+<text x="790" y="920" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="28" font-weight="700" fill="#243b45">ミナシロ</text>
+<text x="790" y="960" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#63767c">南東・約60km</text>
+<text x="790" y="993" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">徒歩4〜5日</text>
+<circle cx="185" cy="895" r="11" fill="#538caa"/>
+<text x="70" y="925" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="28" font-weight="700" fill="#243b45">ハラダ</text>
+<text x="70" y="965" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#63767c">南西・約70km</text>
+<text x="70" y="998" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">徒歩4.5〜5日</text>
+<polyline points="1010,370 1010,290" fill="none" stroke="#243b45" stroke-width="3" stroke-linejoin="round"/>
+<polygon points="1010,280 1001,300 1019,300" fill="#243b45"/>
+<text x="994" y="250" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#243b45">北</text>
+<polyline points="1210,278 1190,370 1215,445 1190,530 1215,640 1185,715" fill="none" stroke="#538caa" stroke-width="9" stroke-linejoin="round"/>
+<text x="1245" y="292" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="700" fill="#538caa">ナル川</text>
+<text x="1245" y="326" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="20" font-weight="400" fill="#63767c">西・徒歩15分</text>
+<polyline points="1450,465 1300,465 1210,465" fill="none" stroke="#b58a48" stroke-width="4" stroke-linejoin="round"/>
+<polyline points="1200,451 1225,451" fill="none" stroke="#243b45" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1200,478 1225,478" fill="none" stroke="#243b45" stroke-width="3" stroke-linejoin="round"/>
+<text x="1140" y="505" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#538caa">渡河地点・橋</text>
+<polyline points="1450,465 1540,325" fill="none" stroke="#b58a48" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="1540" cy="325" r="9" fill="#63767c"/>
+<text x="1470" y="263" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="26" font-weight="700" fill="#243b45">大岩</text>
+<text x="1470" y="300" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">北東・徒歩20分</text>
+<polyline points="1450,465 1625,465" fill="none" stroke="#b58a48" stroke-width="4" stroke-linejoin="round"/>
+<polyline points="1625,465 1690,410" fill="none" stroke="#b58a48" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1625,465 1700,520" fill="none" stroke="#b58a48" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1625,465 1570,550" fill="none" stroke="#b58a48" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1625" cy="465" r="8" fill="#b58a48"/>
+<text x="1550" y="560" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="25" font-weight="700" fill="#243b45">三叉路</text>
+<text x="1530" y="598" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">東寄り・徒歩5分</text>
+<circle cx="1450" cy="465" r="12" fill="#b54f46"/>
+<text x="1370" y="494" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="27" font-weight="700" fill="#b54f46">三ツ辻拠点</text>
+<polyline points="1450,465 1450,665" fill="none" stroke="#b58a48" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="1450" cy="665" r="9" fill="#769676"/>
+<text x="1475" y="650" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="25" font-weight="700" fill="#243b45">B-7 石柱</text>
+<text x="1475" y="689" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">南・徒歩30分</text>
+<polygon points="1150,780 1230,690 1320,715 1400,810 1370,970 1150,970" fill="#edf1e7"/>
+<polyline points="1450,465 1335,675 1270,790 1280,915" fill="none" stroke="#b58a48" stroke-width="4" stroke-linejoin="round"/>
+<text x="1140" y="745" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="24" font-weight="700" fill="#769676">暗い森の入口</text>
+<text x="1140" y="784" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">南西・徒歩約1時間</text>
+<text x="1140" y="836" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="20" font-weight="400" fill="#769676">針鼠狼の出没域</text>
+<circle cx="1280" cy="915" r="9" fill="#b54f46"/>
+<text x="1320" y="875" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="25" font-weight="700" fill="#b54f46">禁域の入口</text>
+<text x="1320" y="914" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#243b45">南南西・徒歩約3時間</text>
+<text x="1320" y="950" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="19" font-weight="400" fill="#63767c">標塔33kmよりずっと手前</text>
+<rect x="40" y="1055" width="1040" height="250" rx="16" fill="#ffffff" stroke="#dedfd6" stroke-width="2"/>
+<text x="68" y="1076" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="28" font-weight="700" fill="#243b45">03  道中の目的地</text>
+<text x="68" y="1126" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="25" font-weight="700" fill="#243b45">廃坑</text>
+<text x="255" y="1126" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="24" font-weight="400" fill="#243b45">カネヅカ道の途中で北へ分岐</text>
+<text x="255" y="1162" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">徒歩3日（野営2泊）／馬で約1.5日</text>
+<text x="68" y="1211" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="24" font-weight="700" fill="#243b45">ミナシロ出作り地</text>
+<text x="365" y="1211" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#243b45">南東・約10km／徒歩2〜3時間</text>
+<text x="365" y="1249" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">霧の窪地・B-6・被害の畑／本村とは別</text>
+<rect x="1110" y="1055" width="650" height="250" rx="16" fill="#ffffff" stroke="#dedfd6" stroke-width="2"/>
+<text x="1140" y="1076" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="28" font-weight="700" fill="#243b45">04  位置を固定しない地点</text>
+<text x="1140" y="1126" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="24" font-weight="700" fill="#243b45">B-12・B-15</text>
+<text x="1140" y="1165" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="21" font-weight="400" fill="#63767c">拠点から徒歩1〜2時間圏／方角は未確定</text>
+<text x="1140" y="1210" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="24" font-weight="700" fill="#243b45">外部市</text>
+<text x="1280" y="1210" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">北西側／徒歩片道5日</text>
+<text x="1140" y="1250" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="20" font-weight="400" fill="#63767c">倒れた標塔：北西遠征先／位置・距離は要確認</text>
+<circle cx="57" cy="1350" r="7" fill="#b54f46"/>
+<text x="75" y="1336" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">拠点</text>
+<circle cx="167" cy="1350" r="7" fill="#538caa"/>
+<text x="185" y="1336" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">集落</text>
+<circle cx="277" cy="1350" r="7" fill="#769676"/>
+<text x="295" y="1336" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">標塔・石柱</text>
+<text x="495" y="1336" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="23" font-weight="400" fill="#63767c">━ 主要道（模式）    ┄ 参考図の補助線</text>
+<text x="45" y="1380" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">縮尺なし。図上の間隔ではなく、記載した距離・所要時間を参照。標塔のA〜Fは参考画像との対応記号。</text>
+<text x="45" y="1419" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="22" font-weight="400" fill="#243b45">徒歩日数は設定資料の通常目安。危険回避・迂回は別途1〜2日。往復は原則2倍＋現地作業・滞在日数。</text>
+<text x="45" y="1458" dominant-baseline="text-before-edge" font-family="Meiryo, sans-serif" font-size="19" font-weight="400" fill="#63767c">出典：三ツ辻拠点2.png／拠点と周辺地理.md／コメディ強化版 第88・120〜126話。配置・経路線は模式表現。</text>
+</svg>
