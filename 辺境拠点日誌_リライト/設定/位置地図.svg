@@ -124,8 +124,12 @@
 <circle cx="1300" cy="500" r="6" fill="#222"/>
 <text x="1290" y="522" font-size="15" text-anchor="end" fill="#222">三ツ辻</text>
 <circle cx="1300.0" cy="497.9" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1302.1" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1275.0" cy="499.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1301.1" cy="497.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1344.2" cy="544.2" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1306.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1269.3" cy="521.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1292.6" cy="492.6" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1279.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1319.2" cy="480.8" r="2.5" fill="#2f7d55" opacity="0.5"/>
@@ -156,14 +160,22 @@
 <text x="1950" y="522" font-size="15" text-anchor="end" fill="#222">三ツ辻</text>
 <circle cx="1960.0" cy="492.9" r="5" fill="#2f7d55"/>
 <text x="1964.0" y="482.9" font-size="14" text-anchor="start" fill="#2f7d55">捕縛蔦の小群生 0.1km</text>
+<circle cx="1967.1" cy="500.0" r="5" fill="#2f7d55"/>
+<text x="1976.1" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">東の隙間の柱 0.1km</text>
+<circle cx="1874.3" cy="497.0" r="5" fill="#2f7d55"/>
+<text x="1865.3" y="502.0" font-size="14" text-anchor="end" fill="#2f7d55">対岸の岩 1.2km</text>
+<circle cx="1963.7" cy="489.9" r="5" fill="#2f7d55"/>
+<text x="1972.7" y="494.9" font-size="14" text-anchor="start" fill="#2f7d55">物見岩 0.1km</text>
 <circle cx="2111.5" cy="651.5" r="5" fill="#2f7d55"/>
 <text x="2120.5" y="656.5" font-size="14" text-anchor="start" fill="#2f7d55">ミナシロ道の倒木 3.0km</text>
 <circle cx="1981.4" cy="500.0" r="5" fill="#2f7d55"/>
 <text x="1985.4" y="520.0" font-size="14" text-anchor="start" fill="#2f7d55">三叉路 0.3km</text>
+<circle cx="1854.7" cy="573.7" r="5" fill="#2f7d55"/>
+<text x="1845.7" y="578.7" font-size="14" text-anchor="end" fill="#2f7d55">ナル川の橋 1.8km</text>
 <circle cx="1934.7" cy="474.7" r="5" fill="#2f7d55"/>
 <text x="1925.7" y="479.7" font-size="14" text-anchor="end" fill="#2f7d55">観測小屋 0.5km</text>
 <circle cx="1888.6" cy="500.0" r="5" fill="#2f7d55"/>
-<text x="1879.6" y="505.0" font-size="14" text-anchor="end" fill="#2f7d55">ナル川の橋 1.0km</text>
+<text x="1879.6" y="505.0" font-size="14" text-anchor="end" fill="#2f7d55">ナル川の水場 1.0km</text>
 <circle cx="2025.7" cy="434.3" r="5" fill="#2f7d55"/>
 <text x="2034.7" y="439.3" font-size="14" text-anchor="start" fill="#2f7d55">大岩 1.3km</text>
 <circle cx="1960.0" cy="642.9" r="5" fill="#2f7d55"/>
