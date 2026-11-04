@@ -143,8 +143,14 @@
 <text x="1187.2" y="495.9" font-size="14" text-anchor="end" fill="#2f7d55">西の石柱 5.0km</text>
 <circle cx="1309.1" cy="396.2" r="5" fill="#2f7d55"/>
 <text x="1318.1" y="401.2" font-size="14" text-anchor="start" fill="#2f7d55">北の石柱 5.0km</text>
-<circle cx="1415.9" cy="546.8" r="5" fill="#2f7d55"/>
-<text x="1424.9" y="551.8" font-size="14" text-anchor="start" fill="#2f7d55">捕縛蔦の大群生 6.0km</text>
+<circle cx="1413.7" cy="514.0" r="5" fill="#2f7d55"/>
+<text x="1422.7" y="519.0" font-size="14" text-anchor="start" fill="#2f7d55">捕縛蔦の大群生 5.5km</text>
+<circle cx="1375.0" cy="500.0" r="5" fill="#2f7d55"/>
+<text x="1384.0" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">一の重ね 3.6km</text>
+<circle cx="1435.4" cy="500.0" r="5" fill="#2f7d55"/>
+<text x="1444.4" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">草毛獣の通り道 6.5km</text>
+<circle cx="1483.3" cy="500.0" r="5" fill="#2f7d55"/>
+<text x="1492.3" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">二の重ね 8.8km</text>
 <circle cx="1229.8" cy="673.8" r="5" fill="#2f7d55"/>
 <text x="1220.8" y="678.8" font-size="14" text-anchor="end" fill="#2f7d55">禁域の入口 9.0km</text>
 <circle cx="1447.3" cy="647.3" r="5" fill="#2f7d55"/>
