@@ -130,6 +130,7 @@
 <circle cx="1279.6" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1301.1" cy="497.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1344.2" cy="544.2" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1346.2" cy="544.6" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1306.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1269.3" cy="521.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1292.6" cy="492.6" r="2.5" fill="#2f7d55" opacity="0.5"/>
@@ -174,6 +175,8 @@
 <text x="1972.7" y="494.9" font-size="14" text-anchor="start" fill="#2f7d55">物見岩 0.1km</text>
 <circle cx="2111.5" cy="651.5" r="5" fill="#2f7d55"/>
 <text x="2120.5" y="656.5" font-size="14" text-anchor="start" fill="#2f7d55">ミナシロ道の倒木 3.0km</text>
+<circle cx="2118.3" cy="652.8" r="5" fill="#2f7d55"/>
+<text x="2127.3" y="657.8" font-size="14" text-anchor="start" fill="#2f7d55">倒木の窪み 3.1km</text>
 <circle cx="1981.4" cy="500.0" r="5" fill="#2f7d55"/>
 <text x="1985.4" y="520.0" font-size="14" text-anchor="start" fill="#2f7d55">三叉路 0.3km</text>
 <circle cx="1854.7" cy="573.7" r="5" fill="#2f7d55"/>
