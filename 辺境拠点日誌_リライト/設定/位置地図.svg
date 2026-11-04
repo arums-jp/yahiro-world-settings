@@ -127,6 +127,7 @@
 <circle cx="1302.1" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1300.0" cy="501.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1275.0" cy="499.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1279.6" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1301.1" cy="497.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1344.2" cy="544.2" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1306.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
@@ -167,6 +168,8 @@
 <text x="1951.0" y="510.7" font-size="14" text-anchor="end" fill="#2f7d55">井戸 0.1km</text>
 <circle cx="1874.3" cy="497.0" r="5" fill="#2f7d55"/>
 <text x="1865.3" y="502.0" font-size="14" text-anchor="end" fill="#2f7d55">対岸の岩 1.2km</text>
+<circle cx="1890.0" cy="500.0" r="5" fill="#2f7d55"/>
+<text x="1881.0" y="505.0" font-size="14" text-anchor="end" fill="#2f7d55">追いこみの岩 1.0km</text>
 <circle cx="1963.7" cy="489.9" r="5" fill="#2f7d55"/>
 <text x="1972.7" y="494.9" font-size="14" text-anchor="start" fill="#2f7d55">物見岩 0.1km</text>
 <circle cx="2111.5" cy="651.5" r="5" fill="#2f7d55"/>
