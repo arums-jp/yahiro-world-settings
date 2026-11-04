@@ -126,6 +126,10 @@
 <circle cx="1300.0" cy="497.9" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1302.1" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1300.0" cy="501.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1301.5" cy="501.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1299.3" cy="504.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1297.4" cy="505.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1300.0" cy="499.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1275.0" cy="499.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1279.6" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1301.1" cy="497.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
@@ -177,6 +181,14 @@
 <text x="1976.1" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">東の隙間の柱 0.1km</text>
 <circle cx="1960.0" cy="505.7" r="5" fill="#2f7d55"/>
 <text x="1951.0" y="510.7" font-size="14" text-anchor="end" fill="#2f7d55">井戸 0.1km</text>
+<circle cx="1965.1" cy="505.1" r="5" fill="#2f7d55"/>
+<text x="1974.1" y="510.1" font-size="14" text-anchor="start" fill="#2f7d55">見張り台 0.1km</text>
+<circle cx="1957.5" cy="514.1" r="5" fill="#2f7d55"/>
+<text x="1948.5" y="519.1" font-size="14" text-anchor="end" fill="#2f7d55">三ツ辻の畑 0.2km</text>
+<circle cx="1950.9" cy="519.4" r="5" fill="#2f7d55"/>
+<text x="1941.9" y="524.4" font-size="14" text-anchor="end" fill="#2f7d55">袋の底の草地 0.3km</text>
+<circle cx="1960.0" cy="496.4" r="5" fill="#2f7d55"/>
+<text x="1969.0" y="501.4" font-size="14" text-anchor="start" fill="#2f7d55">牛小屋 0.1km</text>
 <circle cx="1874.3" cy="497.0" r="5" fill="#2f7d55"/>
 <text x="1865.3" y="502.0" font-size="14" text-anchor="end" fill="#2f7d55">対岸の岩 1.2km</text>
 <circle cx="1890.0" cy="500.0" r="5" fill="#2f7d55"/>

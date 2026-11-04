@@ -135,6 +135,7 @@ def main():
     n_claim = n_issue = 0
     for f in files:
         for ln, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            line = re.sub(r"｜([^《｜]+)《[^》]*》", r"\1", line)  # ルビを外して照合する
             for sent in re.split(r"(?<=[。！？」])", line):
                 for m in naming_issues(sent, d):
                     n_issue += 1
