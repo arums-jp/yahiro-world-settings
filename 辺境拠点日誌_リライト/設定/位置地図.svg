@@ -134,14 +134,27 @@
 <circle cx="1300.0" cy="501.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1301.5" cy="501.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1299.3" cy="504.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1299.1" cy="505.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1297.4" cy="505.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1300.0" cy="499.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1299.6" cy="499.3" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1275.0" cy="499.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1279.6" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1301.1" cy="497.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1344.2" cy="544.2" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1346.2" cy="544.6" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1306.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1269.3" cy="521.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1238.1" cy="561.9" r="5" fill="#2f7d55"/>
+<text x="1229.1" y="566.9" font-size="14" text-anchor="end" fill="#2f7d55">暗い森の縁の野営地 4.2km</text>
+<circle cx="1237.1" cy="572.3" r="5" fill="#2f7d55"/>
+<text x="1228.1" y="577.3" font-size="14" text-anchor="end" fill="#2f7d55">暗い森の採取の道 4.6km</text>
+<circle cx="1235.8" cy="573.9" r="5" fill="#2f7d55"/>
+<text x="1226.8" y="578.9" font-size="14" text-anchor="end" fill="#2f7d55">針鼠狼の巣穴 4.7km</text>
+<circle cx="1227.3" cy="583.6" r="5" fill="#2f7d55"/>
+<text x="1218.3" y="588.6" font-size="14" text-anchor="end" fill="#2f7d55">鈴の境 5.3km</text>
+<circle cx="1235.6" cy="574.1" r="5" fill="#2f7d55"/>
+<text x="1226.6" y="579.1" font-size="14" text-anchor="end" fill="#2f7d55">針鼠狼の尾根 4.7km</text>
 <circle cx="1269.3" cy="521.5" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1292.6" cy="492.6" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1279.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
@@ -191,10 +204,14 @@
 <text x="1974.1" y="510.1" font-size="14" text-anchor="start" fill="#2f7d55">見張り台 0.1km</text>
 <circle cx="1957.5" cy="514.1" r="5" fill="#2f7d55"/>
 <text x="1948.5" y="519.1" font-size="14" text-anchor="end" fill="#2f7d55">三ツ辻の畑 0.2km</text>
+<circle cx="1956.9" cy="517.6" r="5" fill="#2f7d55"/>
+<text x="1947.9" y="522.6" font-size="14" text-anchor="end" fill="#2f7d55">苗代 0.2km</text>
 <circle cx="1950.9" cy="519.4" r="5" fill="#2f7d55"/>
 <text x="1941.9" y="524.4" font-size="14" text-anchor="end" fill="#2f7d55">袋の底の草地 0.3km</text>
 <circle cx="1960.0" cy="496.4" r="5" fill="#2f7d55"/>
 <text x="1969.0" y="501.4" font-size="14" text-anchor="start" fill="#2f7d55">牛小屋 0.1km</text>
+<circle cx="1958.6" cy="497.5" r="5" fill="#2f7d55"/>
+<text x="1949.6" y="502.5" font-size="14" text-anchor="end" fill="#2f7d55">燻製小屋 0.0km</text>
 <circle cx="1874.3" cy="497.0" r="5" fill="#2f7d55"/>
 <text x="1865.3" y="502.0" font-size="14" text-anchor="end" fill="#2f7d55">対岸の岩 1.2km</text>
 <circle cx="1890.0" cy="500.0" r="5" fill="#2f7d55"/>
@@ -209,6 +226,8 @@
 <text x="1985.4" y="520.0" font-size="14" text-anchor="start" fill="#2f7d55">三叉路 0.3km</text>
 <circle cx="1854.7" cy="573.7" r="5" fill="#2f7d55"/>
 <text x="1845.7" y="578.7" font-size="14" text-anchor="end" fill="#2f7d55">ナル川の橋 1.8km</text>
+<circle cx="1854.7" cy="573.7" r="5" fill="#2f7d55"/>
+<text x="1845.7" y="578.7" font-size="14" text-anchor="end" fill="#2f7d55">ハラダ道の浅瀬 1.8km</text>
 <circle cx="1934.7" cy="474.7" r="5" fill="#2f7d55"/>
 <text x="1925.7" y="479.7" font-size="14" text-anchor="end" fill="#2f7d55">観測小屋 0.5km</text>
 <circle cx="1888.6" cy="500.0" r="5" fill="#2f7d55"/>
