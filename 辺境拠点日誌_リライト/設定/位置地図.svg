@@ -87,6 +87,12 @@
 <text x="430" y="522" font-size="15" text-anchor="end" fill="#222">三ツ辻</text>
 <circle cx="369.1" cy="377.2" r="5" fill="#6b5aa0"/>
 <text x="373.1" y="397.2" font-size="14" text-anchor="start" fill="#6b5aa0">廃坑 40km</text>
+<circle cx="369.9" cy="377.2" r="5" fill="#6b5aa0"/>
+<text x="360.9" y="382.2" font-size="14" text-anchor="end" fill="#6b5aa0">廃坑の見張り岩 40km</text>
+<circle cx="365.6" cy="377.2" r="5" fill="#6b5aa0"/>
+<text x="356.6" y="382.2" font-size="14" text-anchor="end" fill="#6b5aa0">廃坑の西の谷 40km</text>
+<circle cx="369.1" cy="429.1" r="5" fill="#6b5aa0"/>
+<text x="360.1" y="434.1" font-size="14" text-anchor="end" fill="#6b5aa0">廃坑への分かれ道 28km</text>
 <circle cx="302.1" cy="362.1" r="5" fill="#b5482f"/>
 <text x="306.1" y="352.1" font-size="14" text-anchor="start" fill="#b5482f">カネヅカ 55km</text>
 <circle cx="595.6" cy="645.1" r="5" fill="#b5482f"/>
