@@ -87,6 +87,8 @@
 <text x="430" y="522" font-size="15" text-anchor="end" fill="#222">三ツ辻</text>
 <circle cx="369.1" cy="377.2" r="5" fill="#6b5aa0"/>
 <text x="373.1" y="397.2" font-size="14" text-anchor="start" fill="#6b5aa0">廃坑 40km</text>
+<circle cx="258.4" cy="358.1" r="5" fill="#6b5aa0"/>
+<text x="249.4" y="363.1" font-size="14" text-anchor="end" fill="#6b5aa0">二つ目の閉じた坑 65km</text>
 <circle cx="369.9" cy="377.2" r="5" fill="#6b5aa0"/>
 <text x="360.9" y="382.2" font-size="14" text-anchor="end" fill="#6b5aa0">廃坑の見張り岩 40km</text>
 <circle cx="365.6" cy="377.2" r="5" fill="#6b5aa0"/>
@@ -196,6 +198,7 @@
 <circle cx="1436.4" cy="652.5" r="5" fill="#2f7d55"/>
 <text x="1445.4" y="657.5" font-size="14" text-anchor="start" fill="#2f7d55">埋め戻した神代の石（出作り地） 9.8km</text>
 <circle cx="1306.2" cy="500.0" r="2.5" fill="#2f7d55" opacity="0.5"/>
+<circle cx="1306.5" cy="499.9" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1268.4" cy="522.1" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <text x="1960" y="40" font-size="22" text-anchor="middle" fill="#333">拠点まわり（半径3.5km）・北が上・縮尺どおり</text>
 <circle cx="1960" cy="500" r="71.4" fill="none" stroke="#ccc" stroke-dasharray="4 4"/>
@@ -259,6 +262,8 @@
 <text x="1969.0" y="647.9" font-size="14" text-anchor="start" fill="#2f7d55">南の石柱 2.0km</text>
 <circle cx="1981.4" cy="500.0" r="5" fill="#2f7d55"/>
 <text x="1990.4" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">辻休み 0.3km</text>
+<circle cx="1982.1" cy="499.6" r="5" fill="#2f7d55"/>
+<text x="1991.1" y="504.6" font-size="14" text-anchor="start" fill="#2f7d55">ノロの囲い 0.3km</text>
 <circle cx="1851.8" cy="575.8" r="5" fill="#2f7d55"/>
 <text x="1842.8" y="580.8" font-size="14" text-anchor="end" fill="#2f7d55">辻休みの道しるべ 1.9km</text>
 </svg>
