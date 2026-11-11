@@ -89,6 +89,20 @@
 <text x="373.1" y="397.2" font-size="14" text-anchor="start" fill="#6b5aa0">廃坑 40km</text>
 <circle cx="258.4" cy="358.1" r="5" fill="#6b5aa0"/>
 <text x="249.4" y="363.1" font-size="14" text-anchor="end" fill="#6b5aa0">二つ目の閉じた坑 65km</text>
+<circle cx="331.9" cy="333.5" r="5" fill="#6b5aa0"/>
+<text x="322.9" y="338.5" font-size="14" text-anchor="end" fill="#6b5aa0">三つ目の閉じた坑 56km</text>
+<circle cx="332.9" cy="341.3" r="5" fill="#6b5aa0"/>
+<text x="323.9" y="346.3" font-size="14" text-anchor="end" fill="#6b5aa0">経路の頭の石 54km</text>
+<circle cx="271.5" cy="342.8" r="5" fill="#6b5aa0"/>
+<text x="262.5" y="347.8" font-size="14" text-anchor="end" fill="#6b5aa0">横寝の輪 65km</text>
+<circle cx="302.1" cy="362.1" r="5" fill="#6b5aa0"/>
+<text x="293.1" y="367.1" font-size="14" text-anchor="end" fill="#6b5aa0">カネヅカ口の道しるべ 55km</text>
+<circle cx="250.3" cy="329.2" r="5" fill="#6b5aa0"/>
+<text x="241.3" y="334.2" font-size="14" text-anchor="end" fill="#6b5aa0">崩れの段 72km</text>
+<circle cx="250.3" cy="329.2" r="5" fill="#6b5aa0"/>
+<text x="241.3" y="334.2" font-size="14" text-anchor="end" fill="#6b5aa0">崩れの段の見張り場 72km</text>
+<circle cx="250.3" cy="329.2" r="5" fill="#6b5aa0"/>
+<text x="241.3" y="334.2" font-size="14" text-anchor="end" fill="#6b5aa0">崩れの手前の窪み 72km</text>
 <circle cx="369.9" cy="377.2" r="5" fill="#6b5aa0"/>
 <text x="360.9" y="382.2" font-size="14" text-anchor="end" fill="#6b5aa0">廃坑の見張り岩 40km</text>
 <circle cx="365.6" cy="377.2" r="5" fill="#6b5aa0"/>
@@ -111,6 +125,10 @@
 <text x="604.6" y="650.1" font-size="14" text-anchor="start" fill="#b5482f">ミナシロ 60km</text>
 <circle cx="264.5" cy="675.5" r="5" fill="#b5482f"/>
 <text x="255.5" y="680.5" font-size="14" text-anchor="end" fill="#b5482f">ハラダ 70km</text>
+<circle cx="289.6" cy="650.4" r="5" fill="#6b5aa0"/>
+<text x="280.6" y="655.4" font-size="14" text-anchor="end" fill="#6b5aa0">ツキの六つ目の丸 60km</text>
+<circle cx="274.5" cy="665.5" r="5" fill="#6b5aa0"/>
+<text x="265.5" y="670.5" font-size="14" text-anchor="end" fill="#6b5aa0">ツキの七つ目の丸 66km</text>
 <circle cx="242.4" cy="322.1" r="5" fill="#6b5aa0"/>
 <text x="233.4" y="327.1" font-size="14" text-anchor="end" fill="#6b5aa0">外部市 75km</text>
 <circle cx="196.1" cy="483.8" r="5" fill="#3b6ea8"/>
