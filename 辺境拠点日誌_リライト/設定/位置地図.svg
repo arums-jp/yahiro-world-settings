@@ -197,8 +197,11 @@
 <text x="1232.1" y="563.9" font-size="14" text-anchor="end" fill="#2f7d55">暗い森の入口 4.0km</text>
 <circle cx="1196.2" cy="490.9" r="5" fill="#2f7d55"/>
 <text x="1187.2" y="495.9" font-size="14" text-anchor="end" fill="#2f7d55">西の石柱 5.0km</text>
+<circle cx="1302.0" cy="441.7" r="2.5" fill="#2f7d55" opacity="0.5"/>
 <circle cx="1309.1" cy="396.2" r="5" fill="#2f7d55"/>
 <text x="1318.1" y="401.2" font-size="14" text-anchor="start" fill="#2f7d55">北の石柱 5.0km</text>
+<circle cx="1346.3" cy="372.7" r="5" fill="#2f7d55"/>
+<text x="1355.3" y="377.7" font-size="14" text-anchor="start" fill="#2f7d55">霧残りの丸 6.5km</text>
 <circle cx="1413.7" cy="514.0" r="5" fill="#2f7d55"/>
 <text x="1422.7" y="519.0" font-size="14" text-anchor="start" fill="#2f7d55">捕縛蔦の大群生 5.5km</text>
 <circle cx="1375.0" cy="500.0" r="5" fill="#2f7d55"/>
@@ -278,6 +281,8 @@
 <text x="2034.7" y="439.3" font-size="14" text-anchor="start" fill="#2f7d55">大岩 1.3km</text>
 <circle cx="1960.0" cy="642.9" r="5" fill="#2f7d55"/>
 <text x="1969.0" y="647.9" font-size="14" text-anchor="start" fill="#2f7d55">南の石柱 2.0km</text>
+<circle cx="1967.0" cy="300.1" r="5" fill="#2f7d55"/>
+<text x="1976.0" y="305.1" font-size="14" text-anchor="start" fill="#2f7d55">北の湿地 2.8km</text>
 <circle cx="1981.4" cy="500.0" r="5" fill="#2f7d55"/>
 <text x="1990.4" y="505.0" font-size="14" text-anchor="start" fill="#2f7d55">辻休み 0.3km</text>
 <circle cx="1982.1" cy="499.6" r="5" fill="#2f7d55"/>
